@@ -1,0 +1,15 @@
+---
+title: "E155 Portfolio"
+image: images/headshot.jpg
+about:
+  template: jolla
+  links: 
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/connor-jones-hmc/
+    - icon: github
+      text: GitHub
+      href: https://github.com/conjoneshmc
+---
+
+Connor Jones is an engineering student at Harvey Mudd College specializing in electrical and computer engineering. He was part of the Breker Clinic during the fall semester of 2025 and is joining the Blackrock Neurotech clinic for the 2026-2027 academic year.
