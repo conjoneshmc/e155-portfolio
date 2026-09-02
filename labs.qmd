@@ -1,0 +1,33 @@
+---
+title: "E155 Labs"
+description: "An overview of all the labs I've worked on over the semester"
+author: "Connor Jones"
+---
+
+## Lab 1: FPGA and MCU Setup and Testing
+
+Coming soon...
+
+## Lab 2: Multiplexed 7-Segment Display
+
+Coming soon...
+
+## Lab 3: Keypad Scanner
+
+Coming soon...
+
+## Lab 4: Digital Audio
+
+Coming soon...
+
+## Lab 5: Interrupts
+
+Coming soon...
+
+## Lab 6: The Internet of Things and SPI
+
+Coming soon...
+
+## Lab 7: The Advanced Encryption Standard
+
+Coming soon...
