@@ -1,0 +1,11 @@
+---
+title: "Lab 1: FPGA and MCU Setup and Testing"
+description: "Soldering SMD components is not fun"
+author: "Connor Jones"
+date: "2026-09-03"
+draft: false
+---
+
+## Introduction
+
+In this lab, I assembled the development board used for the class and tested the MCU and FPGA boards. Then, I wrote a Verilog module to control LEDs and a 7-segment display and uploaded it to the FPGA. Finally, I wired up a 7-segment display to the board and displayed different numbers on it.
