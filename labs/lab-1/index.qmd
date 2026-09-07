@@ -9,3 +9,112 @@ draft: false
 ## Introduction
 
 In this lab, I assembled the development board used for the class and tested the MCU and FPGA boards. Then, I wrote a Verilog module to control LEDs and a 7-segment display and uploaded it to the FPGA. Finally, I wired up a 7-segment display to the board and displayed different numbers on it.
+
+## Design and Testing Methodology
+
+### Onboard LEDs
+
+The first lab deliverable called for a Verilog module to control 3 on-board LEDs according to the state of the four on-board DIP switches. Truth tables were given for `led[0]` and `led[1]`, while `led[2]` was to be blinked at 2.4Hz using the on-board oscillator.
+
+The truth tables for the first two LEDs can be simplified to:
+
+```
+led[0] = S0 ^ S1
+led[1] = S2 & S3
+```
+
+These can simply be implemented via `assign` statements in the top-level Verilog module.
+
+For the third LED, a blink rate of 2.4Hz is needed, but the onboard oscillator provides a frequency of 48MHz (note: I had to divide this down to 24MHz since I was getting timing violations for running the clock too fast). I wrote a `counter` module in Verilog to achieve the desired frequency. It accepts `clk`, `reset`, and `enable` as inputs, and outputs the current value of its counter. The module also accepts the `WIDTH` and `MAXCOUNT` parameters, which control the number of bits in the counter and the maximum value before overflowing to zero, respectively.
+
+If we set `MAXCOUNT` such that it takes one period of 2.4Hz to overflow to zero, we can set `led[2] = (counter_value >= MAXCOUNT/2)` to have it blink at the right frequency. I used the following calculations to determine the right value of `MAXCOUNT`:
+
+::: {.callout-note collapse="true"}
+## Spoiler: Click to show calculations
+![](media/calculations-2.svg)
+:::
+
+### 7-Segment Display
+
+The other lab deliverable called for a Verilog module and circuit to control an external 7-segment display. The module should interpret `S[3:0]` as a binary number and control pins on the FPGA to display the corresponding hexadecimal digit.
+
+The Verilog module is fairly straightforward. There are only 16 possible hexadecimal digits, so we can simply write a `case` block to enumerate over all the possible digits and hardcode what segments should be lit in each case. Since we are using a common anode display, a `0` turns the segment ON, while a `1` keeps it off.
+
+For example, part of the module might look something like:
+
+::: {.callout-note collapse="true"}
+## Spoiler: Click to show code
+```sv
+module seven_segment_encoder(
+  input logic [3:0] digit,
+  output logic [6:0] segments
+);
+  always_comb begin
+    unique case (digit)
+      // Format of segments[6:0] is ABCDEFG
+      // Display is common anode so a 0 turns the segment ON
+      4'b0000: segments = 7'b0000001; // 0
+      4'b0001: segments = 7'b1001111; // 1
+      // ...
+    endcase
+  end
+endmodule
+```
+:::
+
+Next, we need to design the actual circuit itself. The +3.3V from the FPGA obviously connects to the common anode of the display. Then, I chose 7 FPGA pins not in use by anything else to control the segments of the display. Each pin will be connected through a current-limiting resistor to one of the segments so that the current running through each segment is anywhere between 5-20mA. The following calculations were used to determine a suitable resistance value:
+
+::: {.callout-note collapse="true"}
+## Spoiler: Click to show calculations
+![](media/calculations-1.svg)
+:::
+
+## Technical Documentation
+
+### Block Diagram
+
+TODO
+
+### Schematic
+
+![Schematic for the 7-segment display circuit.](media/diagrams-1.svg)
+
+The above figure shows the schematic for the 7-segment display. Each segment is connected through the common anode of the display to the +3.3V pin on the FPGA, and the cathodes of each segment are connected to individual GPIO pins. Current-limiting resistors (whose values were calculated in the previous section) are placed in series with each segment to limit the current draw from the FPGA.
+
+## Results and Discussion
+
+### Testbench for Top-Level Module
+
+TODO
+
+### Testbench for 7-Segment Module
+
+![Simulation waveforms from the `seven-segment-encoder` module demonstrating the correct outputs.](media/seven-seg-tb.png)
+
+The waveforms above demonstrate the `seven-segment-encoder` module working correctly. Every possible hexadecimal digit is tested and the segments are checked for displaying the correct number. (You may have to open the image in a new tab to view everything properly).
+
+### Testbench for Counter
+
+The `counter` module met all the intended design specifications, as shown by the following waveforms.
+
+![Simulation waveforms from the `counter` module testbench demonstrating the reset feature working correctly.](media/counter-tb-1.png)
+
+The waveforms above demonstrate the reset feature of the `counter` module working correctly. When `reset` is HIGH, `value` is always `0`, regardless of the `clk`. `reset` also works asynchronously. When `clk` is HIGH and `reset` changes from LOW to HIGH, `value` is immediately reset to 0, before the next clock cycle.
+
+![](media/counter-tb-2.png)
+
+![Simulation waveforms from the `counter` module testbench demonstrating the enable feature working correctly.](media/counter-tb-3.png)
+
+The waveforms above demonstrate the enable feature of the `counter` module working correctly. When `enable` is LOW, `value` retains its previous state and does not increment on the rising edge of `clk`.
+
+![Simulation waveforms from the `counter` module testbench demonstrating the `MAXCOUNT` parameter working correctly.](media/counter-tb-4.png)
+
+The waveforms above demonstrate the `MAXCOUNT` feature of the `counter` module working correctly. In this case, `MAXCOUNT` was set to a value of 48. When `value` reaches 47, it overflows back to 0 on the next clock cycle.
+
+### Hardware
+
+The design also met all given specifications in hardware.
+
+## Conclusion
+
+## AI Prototype Summary
