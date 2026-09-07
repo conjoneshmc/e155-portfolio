@@ -6,7 +6,7 @@ author: "Connor Jones"
 
 ## Lab 1: FPGA and MCU Setup and Testing
 
-[View lab report](./lab-1/)
+[View lab report](./lab-1/index.qmd)
 
 ## Lab 2: Multiplexed 7-Segment Display
 
