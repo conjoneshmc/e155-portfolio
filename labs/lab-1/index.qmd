@@ -1,6 +1,6 @@
 ---
 title: "Lab 1: FPGA and MCU Setup and Testing"
-description: "Welcome to hell!"
+description: "Welcome to hell"
 author: "Connor Jones"
 date: "2026-09-07"
 draft: false
@@ -14,7 +14,7 @@ In this lab, I assembled the development board used for the class and tested the
 
 ### Onboard LEDs
 
-The first lab deliverable called for a Verilog module to control 3 on-board LEDs according to the state of the four on-board DIP switches. Truth tables were given for `led[0]` and `led[1]`, while `led[2]` was to be blinked at 2.4Hz using the on-board oscillator.
+The first lab deliverable called for a Verilog module to control 3 on-board LEDs according to the values of four on-board DIP switches. Truth tables were given for `led[0]` and `led[1]`, while `led[2]` was to be blinked at 2.4Hz using the on-board oscillator.
 
 The truth tables for the first two LEDs can be simplified to:
 
@@ -23,7 +23,7 @@ led[0] = S0 ^ S1
 led[1] = S2 & S3
 ```
 
-These can simply be implemented via `assign` statements in the top-level Verilog module.
+which can be implemented via `assign` statements in the top-level Verilog module.
 
 For the third LED, a blink rate of 2.4Hz is needed, but the onboard oscillator provides a frequency of 48MHz (note: I had to divide this down to 24MHz since I was getting timing violations for running the clock too fast). I wrote a `counter` module in Verilog to achieve the desired frequency. It accepts `clk`, `reset`, and `enable` as inputs, and outputs the current value of its counter. The module also accepts the `WIDTH` and `MAXCOUNT` parameters, which control the number of bits in the counter and the maximum value before overflowing to zero, respectively.
 
@@ -63,7 +63,7 @@ endmodule
 ```
 :::
 
-Next, we need to design the actual circuit itself. The +3.3V from the FPGA obviously connects to the common anode of the display. Then, I chose 7 FPGA pins not in use by anything else to control the segments of the display. Each pin will be connected through a current-limiting resistor to one of the segments so that the current running through each segment is anywhere between 5-20mA. The following calculations were used to determine a suitable resistance value:
+Next, we need to design the actual circuit itself. The +3.3V from the FPGA obviously connects to the common anode of the display. Then, I chose 7 FPGA pins not in use by anything else to control the segments of the display. Each pin will be connected through a current-limiting resistor to one of the segments so that the current running through each segment is limited between 5-20mA. The following calculations were used to determine a suitable resistance value:
 
 ::: {.callout-note collapse="true"}
 ## Spoiler: Click to show calculations
