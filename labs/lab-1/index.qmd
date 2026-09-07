@@ -8,7 +8,7 @@ draft: false
 
 ## Introduction
 
-In this lab, I assembled the development board used for the class and tested the MCU and FPGA boards. Then, I wrote a Verilog module to control LEDs and a 7-segment display and uploaded it to the FPGA. Finally, I wired up a 7-segment display to the board and displayed different numbers on it.
+In this lab, I assembled the development board used for the class and tested the MCU and FPGA boards. Then, I wrote a Verilog module to control LEDs and a 7-segment display and uploaded it to the FPGA. Finally, I wired up an external 7-segment display to the board to display different hexadecimal digits, which could be controlled by the on-board DIP switches.
 
 ## Design and Testing Methodology
 
@@ -136,6 +136,119 @@ The design also met all given specifications in hardware. The 2 on-board LEDs di
 
 In this lab, I successfully assembled the development board and tested the MCU and FPGA boards. Then, I wrote Verilog modules to control 3 on-board LEDs and an external 7-segment display. All Verilog modules were tested in simulation and displayed the correct behavior. When the design was flashed to the FPGA, the behavior also correctly met the specifications.
 
-I spent a total of **27 hours** on this lab.
+I spent a total of **28 hours** on this lab.
 
 ## AI Prototype Summary
+
+I used ChatGPT 5.6-Sol to write the Verilog code for the AI prototype. The prompt given was:
+
+> Write SystemVerilog HDL to leverage the internal high speed oscillator in the Lattice UP5K FPGA and blink an LED at 2.4 Hz. Take full advantage of SystemVerilog syntax, for example, using logic instead of wire and reg.
+
+Here's the generated code and LLM response:
+
+::: {.callout-note collapse="true"}
+## Spoiler: Click to show code
+```sv
+module led_blinker (
+    output logic led
+);
+
+    // -------------------------------------------------------------------------
+    // Internal high-frequency oscillator
+    //
+    // SB_HFOSC generates a nominal 48 MHz clock.
+    // CLKHF_DIV = "0b11" divides it by 8:
+    //
+    //      48 MHz / 8 = 6 MHz
+    // -------------------------------------------------------------------------
+    logic clk_6mhz;
+
+    SB_HFOSC #(
+        .CLKHF_DIV("0b11")
+    ) hfosc (
+        .CLKHFPU (1'b1),
+        .CLKHFEN (1'b1),
+        .CLKHF   (clk_6mhz)
+    );
+
+    // -------------------------------------------------------------------------
+    // LED divider
+    //
+    // A complete LED period requires two toggles:
+    //
+    //      HALF_PERIOD_CYCLES
+    //          = 6 MHz / (2 * 2.4 Hz)
+    //          = 1,250,000 clocks
+    //
+    // $clog2(1,250,000) = 21 bits.
+    // -------------------------------------------------------------------------
+    localparam int unsigned HALF_PERIOD_CYCLES = 1_250_000;
+    localparam int unsigned COUNTER_WIDTH =
+        $clog2(HALF_PERIOD_CYCLES);
+
+    logic [COUNTER_WIDTH-1:0] counter;
+
+    // Initial state is loaded when the FPGA is configured.
+    initial begin
+        counter = '0;
+        led     = 1'b0;
+    end
+
+    always_ff @(posedge clk_6mhz) begin
+        if (counter == HALF_PERIOD_CYCLES - 1) begin
+            counter <= '0;
+            led     <= ~led;
+        end
+        else begin
+            counter <= counter + 1'b1;
+        end
+    end
+endmodule
+```
+:::
+
+::: {.callout-note collapse="true"}
+## Spoiler: Click to show transcript
+
+The UP5K includes the `SB_HFOSC` primitive, whose nominal 48 MHz oscillator can be divided internally by 1, 2, 4, or 8. Using the `/8` setting gives a nominal 6 MHz clock and reduces the size/activity of the fabric counter.
+
+For a 2.4 Hz blink with a 50% duty cycle, the LED must toggle at 4.8 Hz:
+
+$$
+  N = \frac{6,000,000}{2(2.4)} = 1,250,000
+$$
+
+So the LED toggles every 1,250,000 oscillator clocks.
+
+[verilog code here]
+
+Lattice specifies the `SB_HFOSC` divider encodings as `"0b00"` = 48 MHz, `"0b01"` = 24 MHz, `"0b10"` = 12 MHz, and `"0b11"` = 6 MHz.
+
+**Why this produces 2.4 Hz**
+
+Each counter interval is
+
+$$
+  \frac{1,250,000}{6,000,000} = 0.208333 \mathrm{s}
+$$
+
+and the LED changes state after each interval. One complete on/off cycle is therefore 0.416667s, giving a blink frequency of 2.4 Hz.
+
+One important qualification: 2.4 Hz is nominal, because the UP5K's internal HFOSC is not a precision clock. Lattice specifies the nominal HFOSC as 48 MHz with approximately ±10% frequency variation over the commercial temperature range and ±20% over the industrial range. Thus, without calibration or an external reference clock, the actual blink rate can deviate correspondingly from 2.4 Hz.
+
+If your board's LED is active-low, you can either connect this internal signal to the physical output through an inversion or simply treat `led == 0` as illuminated.
+
+Would you like the module adapted for an active-low LED or a specific UP5K board pinout?
+:::
+
+A couple notes from the generated Verilog code:
+
+- The internal oscillator was divided by a factor of 8 to reduce the frequency down to 6MHz, while I only divided by a factor of 2 because I was getting timing errors for running at 48MHz. The LLM response explains this was done to minimize resource usage.
+- It uses `localparam int unsigned` to declare a constant for the number of clock cycles in-between LED toggles. In my Verilog, I simply just hardcoded this value into the parameter list of the counter.
+- It calculates the minimum number of bits required to store the counter value on-the-fly by taking the ceiling of the binary logarithm of the clock period. In my Verilog, I just used a nice round number of 32, so the LLM code optimizes away unnecessary registers.
+- It uses an `initial begin` block to reset the counter and LED to a known state, instead of an external reset signal. I'm wary of this because `initial begin` usually isn't synthesizable and only used for testbenches.
+- The counter module logic is contained in the top-level module instead of a separate submodule like in my Verilog code.
+
+The code and calculations generated by the LLM seem correct and reasonable (save for the `initial begin` block, which I found questionable). The architecture for LED blinker is nearly the same used in my lab, except I used a submodule to contain the counter logic whereas the LLM didn't.
+
+I did not expect the Verilog code to work on the first attempt because of the `initial begin` block, but Radiant synthesized it without any issues. Upon further research, this is because modern FPGA toolchains accept restricted `initial` blocks as synthesizable, as long as they are only used to load configuration data into RAM or initial values into flip-flops. However, this is not considered good practice because it is not consistent across all toolchains or architectures. When I asked ChatGPT to revise the code without using `initial begin`, it produced a new version using an asynchronous reset signal instead.
