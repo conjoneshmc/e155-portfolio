@@ -71,6 +71,8 @@ Next, we need to design the actual circuit itself. The +3.3V from the FPGA obvio
 
 ## Technical Documentation
 
+A link to the code used in this lab can be found [at this GitHub repository](https://github.com/conjoneshmc/e155-labs).
+
 ### Block Diagram
 
 TODO
@@ -85,7 +87,17 @@ The above figure shows the schematic for the 7-segment display. Each segment is 
 
 ### Testbench for Top-Level Module
 
-TODO
+![Simulation waveforms from the top-level module demonstrating correct submodule connections, LED assignments, and `hf_osc_clk` behavior.](media/toplevel-tb.png)
+
+The waveforms above demonstrate correct top-level module behavior. In particular, note that:
+
+- `led_counter.reset` is always the opposite of top-level input `reset_bar`
+- `led_counter.clk` tracks `hf_osc_clk`
+- `led_counter.value` is properly connected to `led_counter_value` (a logic variable internal to the top-level module used to control whether `leds[2]` should be lit)
+- `encoder.segments` is properly connected to the top-level output `seven_segment_leds`
+- `encoder.digit` is always the inverse of `switches_bar` (since the switches are active low)
+- `leds[1:0]` demonstrate the correct logic assignments according to the value of `switches_bar`
+  - For example, when `switches_bar` is `1101`, `s[1:0] = 10` and `leds[0] = 1`, which checks out since it was specified that `led[0] = s[1] ^ s[0]`
 
 ### Testbench for 7-Segment Module
 
@@ -113,8 +125,12 @@ The waveforms above demonstrate the `MAXCOUNT` feature of the `counter` module w
 
 ### Hardware
 
-The design also met all given specifications in hardware.
+The design also met all given specifications in hardware. The 2 on-board LEDs display the correct logic operations, and the other LED blinks at a rate of ~2.4Hz (measured with a stopwatch). The 7-segment display also uniquely displays all hexadecimal digits `0x0` though `0xF`, and all segments are equally bright regardless of how many segments are lit. The digit shown on the 7-segment-display is also correctly set according to the value of the switches.
 
 ## Conclusion
+
+In this lab, I successfully assembled the development board and tested the MCU and FPGA boards. Then, I wrote Verilog modules to control 3 on-board LEDs and an external 7-segment display. All Verilog modules were tested in simulation and displayed the correct behavior. When the design was flashed to the FPGA, the behavior also correctly met the specifications.
+
+I spent a total of **15 hours** on this lab.
 
 ## AI Prototype Summary
