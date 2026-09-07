@@ -4,6 +4,7 @@ project:
 website:
   title: "E155 Portfolio"
   navbar:
+    background: danger
     left:
       - href: index.qmd
         text: Home
@@ -15,10 +16,6 @@ website:
 format:
   html:
     theme:
-      - cosmo
-      - brand
+      - yeti
     css: styles.css
     toc: true
-
-
-

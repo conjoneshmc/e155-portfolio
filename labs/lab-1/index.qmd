@@ -1,6 +1,6 @@
 ---
 title: "Lab 1: FPGA and MCU Setup and Testing"
-description: "Welcome to hell"
+description: "Welcome to hell!"
 author: "Connor Jones"
 date: "2026-09-07"
 draft: false
@@ -40,10 +40,11 @@ The other lab deliverable called for a Verilog module and circuit to control an 
 
 The Verilog module is fairly straightforward. There are only 16 possible hexadecimal digits, so we can simply write a `case` block to enumerate over all the possible digits and hardcode what segments should be lit in each case. Since we are using a common anode display, a `0` turns the segment ON, while a `1` keeps it off.
 
-For example, part of the module might look something like:
-
 ::: {.callout-note collapse="true"}
 ## Spoiler: Click to show code
+
+Here's part of the Verilog module. The full code can be viewed in the GitHub repository for this lab.
+
 ```sv
 module seven_segment_encoder(
   input logic [3:0] digit,
@@ -75,13 +76,17 @@ A link to the code used in this lab can be found [at this GitHub repository](htt
 
 ### Block Diagram
 
-TODO
+![Block diagram for top-level Verilog module.](media/block-diagram.png)
+
+The figure above shows the block diagram for the top-level Verilog module. The high-frequency oscillator module drives an internal clock, which is connected to a counter to make `leds[2]` blink at the appropriate frequency. `leds[0]` and `leds[1]` are driven directly by logic gates through a top-level `assign` statement. Finally, the switch values are fed directly to the `seven_segment_encoder` module, which is really just a 4-bit lookup table to encode all 16 hexadecimal digits as segments on the 7-segment display.
+
+Note that `~reset` and `~switches` are active low, so I inverted these signals before using them in my code.
 
 ### Schematic
 
 ![Schematic for the 7-segment display circuit.](media/diagrams-1.svg)
 
-The above figure shows the schematic for the 7-segment display. Each segment is connected through the common anode of the display to the +3.3V pin on the FPGA, and the cathodes of each segment are connected to individual GPIO pins. Current-limiting resistors (whose values were calculated in the previous section) are placed in series with each segment to limit the current draw from the FPGA.
+The figure above shows the schematic for the 7-segment display. Each segment is connected through the common anode of the display to the +3.3V pin on the FPGA, and the cathodes of each segment are connected to individual GPIO pins. Current-limiting resistors (whose values were calculated in the previous section) are placed in series with each segment to limit the current draw from the FPGA.
 
 ## Results and Discussion
 
@@ -131,6 +136,6 @@ The design also met all given specifications in hardware. The 2 on-board LEDs di
 
 In this lab, I successfully assembled the development board and tested the MCU and FPGA boards. Then, I wrote Verilog modules to control 3 on-board LEDs and an external 7-segment display. All Verilog modules were tested in simulation and displayed the correct behavior. When the design was flashed to the FPGA, the behavior also correctly met the specifications.
 
-I spent a total of **25 hours** on this lab.
+I spent a total of **27 hours** on this lab.
 
 ## AI Prototype Summary
