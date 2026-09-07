@@ -14,7 +14,7 @@
 #set page(
   width: 210mm,
   height: auto,
-  margin: (x: 12mm, y: 14mm)
+  margin: 8mm
 )
 
 #set text(
@@ -119,16 +119,16 @@ $
 
 This is not a standard resistance value, so we will pick the closest value of #zi.ohm[150] instead. This results in a current draw of #quan[8.667 mA] instead, which is still within spec.
 
+#pagebreak()
+
 = LED Blink Frequency
 
-_Note: the spec sheet indicates a target frequency of #quan[2 Hz] but the actual lab instructions say to target a frequency of #quan[2.4 Hz] instead. I will be using the latter._
+The `HSOSC` module connects to an on-board high-frequency oscillator at #quan[24 MHz]. One period of the clock cycle is therefore #quan[41.667 ns]. We wish to blink the LED at #quan[2.4 Hz], which has a period of #quan[0.417 s].
 
-The `HSOSC` module connects to an on-board high-frequency oscillator at #quan[48 MHz]. One period of the clock cycle is therefore #quan[20.833 ns]. We wish to blink the LED at #quan[2.4 Hz], which has a period of #quan[0.417 s].
-
-My `clk_freq_divider` verilog module toggles the LED on/off each time its counter reaches the `MAXCOUNT` value. Thus, we should set `MAXCOUNT` so that the counter takes half of the desired period to overflow back to zero (and thus a single on/off cycle will sum to one whole period):
+My `counter` Verilog module resets whenever it reaches the `MAXCOUNT` value. Thus, we should set `MAXCOUNT` so that it takes one full period to overflow:
 
 $
-  #quan[20.833 ns] dot "count" &= #quan[0.417 s] / 2 \
+  #quan[41.667 ns] dot "count" &= #quan[0.417 s] \
   "count" &= 10000000
 $
 

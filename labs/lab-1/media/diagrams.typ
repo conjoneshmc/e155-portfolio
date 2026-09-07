@@ -14,7 +14,7 @@
 #set page(
   width: 210mm,
   height: auto,
-  margin: (x: 12mm, y: 14mm)
+  margin: 8mm
 )
 
 #set text(
