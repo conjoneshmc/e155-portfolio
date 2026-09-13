@@ -19,3 +19,4 @@ format:
       - yeti
     css: styles.css
     toc: true
+    toc-depth: 4
