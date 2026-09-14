@@ -80,10 +80,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-cec5fe2bcc5b78801866de12c7617f02.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-2755563d35d8dc0c5ec07910cbce5107.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-87bffa701a79ed8ec71ae3e9b147f3fa.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -142,7 +142,6 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -166,10 +165,25 @@ window.Quarto = {
     <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../../labs/index.html"> 
-<span class="menu-text">Labs</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labs" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Labs</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-labs">    
+        <li>
+    <a class="dropdown-item" href="../../labs/index.html">
+ <span class="dropdown-text">Overview</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../labs/lab-1/index.html">
+ <span class="dropdown-text">Lab 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../labs/lab-2/index.html">
+ <span class="dropdown-text">Lab 2</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="../../blog.html"> 
 <span class="menu-text">Blog</span></a>
@@ -192,17 +206,17 @@ window.Quarto = {
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#design-and-testing-methodology" id="toc-design-and-testing-methodology" class="nav-link" data-scroll-target="#design-and-testing-methodology">Design and Testing Methodology</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#onboard-leds" id="toc-onboard-leds" class="nav-link" data-scroll-target="#onboard-leds">Onboard LEDs</a></li>
   <li><a href="#segment-display" id="toc-segment-display" class="nav-link" data-scroll-target="#segment-display">7-Segment Display</a></li>
   </ul></li>
   <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link" data-scroll-target="#technical-documentation">Technical Documentation</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#block-diagram" id="toc-block-diagram" class="nav-link" data-scroll-target="#block-diagram">Block Diagram</a></li>
   <li><a href="#schematic" id="toc-schematic" class="nav-link" data-scroll-target="#schematic">Schematic</a></li>
   </ul></li>
   <li><a href="#results-and-discussion" id="toc-results-and-discussion" class="nav-link" data-scroll-target="#results-and-discussion">Results and Discussion</a>
-  <ul class="collapse">
+  <ul>
   <li><a href="#testbench-for-top-level-module" id="toc-testbench-for-top-level-module" class="nav-link" data-scroll-target="#testbench-for-top-level-module">Testbench for Top-Level Module</a></li>
   <li><a href="#testbench-for-7-segment-module" id="toc-testbench-for-7-segment-module" class="nav-link" data-scroll-target="#testbench-for-7-segment-module">Testbench for 7-Segment Module</a></li>
   <li><a href="#testbench-for-counter" id="toc-testbench-for-counter" class="nav-link" data-scroll-target="#testbench-for-counter">Testbench for Counter</a></li>

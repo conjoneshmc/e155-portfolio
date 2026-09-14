@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Connor Jones">
+<meta name="dcterms.date" content="2026-09-11">
+<meta name="description" content="Under construction">
+
+<title>Lab 2: Multiplexed 7-Segment Display – E155 Portfolio</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-cec5fe2bcc5b78801866de12c7617f02.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-87bffa701a79ed8ec71ae3e9b147f3fa.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">E155 Portfolio</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labs" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Labs</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-labs">    
+        <li>
+    <a class="dropdown-item" href="../../labs/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../labs/lab-1/index.html">
+ <span class="dropdown-text">Lab 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../labs/lab-2/index.html">
+ <span class="dropdown-text">Lab 2</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#design-and-calculations" id="toc-design-and-calculations" class="nav-link" data-scroll-target="#design-and-calculations">Design and Calculations</a>
+  <ul>
+  <li><a href="#multiplexed-7-segment-display" id="toc-multiplexed-7-segment-display" class="nav-link" data-scroll-target="#multiplexed-7-segment-display">Multiplexed 7-Segment Display</a></li>
+  <li><a href="#keypad" id="toc-keypad" class="nav-link" data-scroll-target="#keypad">Keypad</a></li>
+  </ul></li>
+  <li><a href="#technical-documentation" id="toc-technical-documentation" class="nav-link" data-scroll-target="#technical-documentation">Technical Documentation</a>
+  <ul>
+  <li><a href="#block-diagrams" id="toc-block-diagrams" class="nav-link" data-scroll-target="#block-diagrams">Block Diagrams</a>
+  <ul class="collapse">
+  <li><a href="#multiplexed-7-segment-display-1" id="toc-multiplexed-7-segment-display-1" class="nav-link" data-scroll-target="#multiplexed-7-segment-display-1">Multiplexed 7-Segment Display</a></li>
+  <li><a href="#keypad-scanner" id="toc-keypad-scanner" class="nav-link" data-scroll-target="#keypad-scanner">Keypad Scanner</a></li>
+  </ul></li>
+  <li><a href="#schematics" id="toc-schematics" class="nav-link" data-scroll-target="#schematics">Schematics</a>
+  <ul class="collapse">
+  <li><a href="#multiplexed-7-segment-display-2" id="toc-multiplexed-7-segment-display-2" class="nav-link" data-scroll-target="#multiplexed-7-segment-display-2">Multiplexed 7-Segment Display</a></li>
+  <li><a href="#keypad-scanner-1" id="toc-keypad-scanner-1" class="nav-link" data-scroll-target="#keypad-scanner-1">Keypad Scanner</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#results-and-discussion" id="toc-results-and-discussion" class="nav-link" data-scroll-target="#results-and-discussion">Results and Discussion</a>
+  <ul>
+  <li><a href="#testbench-simulation" id="toc-testbench-simulation" class="nav-link" data-scroll-target="#testbench-simulation">Testbench Simulation</a>
+  <ul class="collapse">
+  <li><a href="#multiplexed-7-segment-display-top-level" id="toc-multiplexed-7-segment-display-top-level" class="nav-link" data-scroll-target="#multiplexed-7-segment-display-top-level">Multiplexed 7-Segment Display Top-Level</a></li>
+  <li><a href="#keypad-top-level" id="toc-keypad-top-level" class="nav-link" data-scroll-target="#keypad-top-level">Keypad Top-Level</a></li>
+  <li><a href="#scanner-module" id="toc-scanner-module" class="nav-link" data-scroll-target="#scanner-module">Scanner Module</a></li>
+  </ul></li>
+  <li><a href="#hardware" id="toc-hardware" class="nav-link" data-scroll-target="#hardware">Hardware</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#ai-prototype" id="toc-ai-prototype" class="nav-link" data-scroll-target="#ai-prototype">AI Prototype</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lab 2: Multiplexed 7-Segment Display</h1>
+</div>
+
+<div>
+  <div class="description">
+    Under construction
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Connor Jones </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 11, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In this lab, I multiplexed a dual 7-segment display using the single 7-segment display module from Lab 1. I also designed and built a keypad scanning module capable of reading multiple simultaneous keypresses in preparation for Lab 3.</p>
+</section>
+<section id="design-and-calculations" class="level2">
+<h2 class="anchored" data-anchor-id="design-and-calculations">Design and Calculations</h2>
+<p>In this lab, care had to be taken to ensure that current draw from the display did not exceed the maximum ratings of the FPGA. The table below taken from the datasheet indicates that the maximum current draw of the I/O pins is 8mA, whether sourcing or sinking current.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="media/fpga-specs.png" class="img-fluid figure-img"></p>
+<figcaption>Table showing the recommended operating conditions of the FPGA pins for different logic levels, taken from the iCE40 datasheet.</figcaption>
+</figure>
+</div>
+<section id="multiplexed-7-segment-display" class="level3">
+<h3 class="anchored" data-anchor-id="multiplexed-7-segment-display">Multiplexed 7-Segment Display</h3>
+<p>To drive the dual 7-segment display, 3906 PNP transistors were placed between +Vcc and the anodes of each digit, and current-limiting resistors were placed between the cathodes of each segment and the FPGA pins. Current-limiting resistors were also connected to the base pins of the transistors.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="media/pnp-specs.png" class="img-fluid figure-img"></p>
+<figcaption>Table showing PNP transistor characteristics in saturation mode.</figcaption>
+</figure>
+</div>
+<p>Since we’re using the transistor as a switch, we’ll assume it’s in saturation. When the transistor is in saturation, <span class="math inline">\(I_C\)</span> = 50mA, and <span class="math inline">\(I_B\)</span> = 5mA, then <span class="math inline">\(V_\mathrm{CE}\)</span> = 0.4V and <span class="math inline">\(V_\mathrm{BE}\)</span> = 0.95V. We already know the forward voltage of the segments on the display is 2V. A basic schematic looks like:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="media/schematic-basic-display.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%"></p>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Spoiler: Click to show calculations
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="media/calculations-1.svg" class="mb-0 img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p><span class="math inline">\(R_s\)</span> is a standard resistance value that can be left as-is. For <span class="math inline">\(R_L\)</span>, 126 Ohms is not a standard resistance value, so we’ll pick the closest value of 150 Ohms instead.</p>
+</div>
+</div>
+</div>
+<p>We’ll also need to multiplex the display at a suitable rate so that the digits neither flicker nor bleed together. A good frequency to target is 120Hz, which is high enough that the naked eye cannot perceive flickering while also being low enough to prevent bleeding. We’ll need to set the <code>MAXCOUNT</code> value of the counter such that the display refreshes 120 times per second.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Spoiler: Click to show calculations
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="media/calculations-2.svg" class="mb-0 img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="keypad" class="level3">
+<h3 class="anchored" data-anchor-id="keypad">Keypad</h3>
+<p>To scan the 4x4 keypad, we’ll use an open-drain output to drive the rows of the keypad low so that we can detect multiple keypresses without any issue. The transistors are switching the low side of the load this time, so we’ll need to use an NPN. The characteristics of the 3904 NPN transistor are shown in the table below.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="media/npn-specs.png" class="img-fluid figure-img"></p>
+<figcaption>Table showing NPN transistor characteristics in saturation mode.</figcaption>
+</figure>
+</div>
+<p>When the transistor is in saturation, <span class="math inline">\(I_C\)</span> = 10mA, and <span class="math inline">\(I_B\)</span> = 1mA, then <span class="math inline">\(V_\mathrm{CE}\)</span> = 0.2V and <span class="math inline">\(V_\mathrm{BE}\)</span> = 0.85V. The schematic is like the one for the multiplexed 7-segment display, but with the transistor on the low side and the load replaced with a switch.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Spoiler: Click to show calculations
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="media/calculations-3.svg" class="mb-0 img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p><span class="math inline">\(R_s\)</span> is the series resistance connected to the base of the transistor and <span class="math inline">\(R_p\)</span> is the pullup resistor to Vcc. Neither calculated values were standard resistance values, so the closest ones were picked instead.</p>
+</div>
+</div>
+</div>
+<p>The specifications say to target a blinking rate of 2 Hz, and because there are 4 states, each output must last 0.125 seconds. Thus, <code>SCAN_DELAY</code> should be <span class="math inline">\(24 \mathrm{MHz} \cdot 0.125 \mathrm{s} = 3000000\)</span>.</p>
+</section>
+</section>
+<section id="technical-documentation" class="level2">
+<h2 class="anchored" data-anchor-id="technical-documentation">Technical Documentation</h2>
+<p><strong>Note:</strong> The two different deliverables (7-segment display and keypad scanner) were demonstrated as separate modules for this lab because there were not enough FPGA pins to run both simultaneously.</p>
+<section id="block-diagrams" class="level3">
+<h3 class="anchored" data-anchor-id="block-diagrams">Block Diagrams</h3>
+<section id="multiplexed-7-segment-display-1" class="level4">
+<h4 class="anchored" data-anchor-id="multiplexed-7-segment-display-1">Multiplexed 7-Segment Display</h4>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="media/block-diagram-7seg.jpg" class="img-fluid figure-img"></p>
+<figcaption>Block diagram for the multiplexed 7-segment display.</figcaption>
+</figure>
+</div>
+<p>The figure above shows the block diagram for the multiplexed 7-segment display. The multiplexing logic is contained in the <code>dual_seg7</code> module, which uses a counter to switch between displaying the different digits. When the counter is below half of its maximum count, a multiplexer feeds <code>digit_0</code> into the <code>digit_to_use</code> node and drives <code>anode[0]</code> high (PNP transistors are active low). When the counter is above half of its maximum count, the multiplexer selects <code>digit_1</code> instead and toggles the anodes so that <code>anode[1]</code> is driven high. The <code>seg7</code> module from Lab 1 encodes the selected digit as segments on a single digit 7-segment display.</p>
+<hr>
+</section>
+<section id="keypad-scanner" class="level4">
+<h4 class="anchored" data-anchor-id="keypad-scanner">Keypad Scanner</h4>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="media/block-diagram-keypad.jpg" class="img-fluid figure-img"></p>
+<figcaption>Block diagram for the keypad scanner.</figcaption>
+</figure>
+</div>
+<p>The figure above shows the block diagram for the keypad scanner circuit. The logic responsible for switching between the different outputs is implemented in the counter, comparison blocks, and muxes. When the counter is below 1/4 of its maximum count, the muxes select the first output. Otherwise, if the counter is between 1/4 and 2/4 of its maximum count, the muxes select the second output, and so on. The values read from the keypad columns are simply driven back out onto the LEDs (after being inverted since the inputs are active low).</p>
+</section>
+</section>
+<section id="schematics" class="level3">
+<h3 class="anchored" data-anchor-id="schematics">Schematics</h3>
+<section id="multiplexed-7-segment-display-2" class="level4">
+<h4 class="anchored" data-anchor-id="multiplexed-7-segment-display-2">Multiplexed 7-Segment Display</h4>
+<p><img src="media/schematic-7seg-1.png" class="img-fluid"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="media/schematic-7seg-2.png" class="img-fluid figure-img"></p>
+<figcaption>Schematics for the multiplexed 7-segment display. The top schematic shows the wiring of the display, and the bottom schematic shows the wiring of the switches used to control the display.</figcaption>
+</figure>
+</div>
+<p>The figures above show the schematics of the circuit used to drive the dual 7-segment display. 3906 PNP transistors are used to switch current through the common anodes of each digit to avoid damaging the FPGA pins with excessive current. Each segment is connected through a current-limiting resistor to further regulate the current going into the I/O pins.</p>
+<hr>
+</section>
+<section id="keypad-scanner-1" class="level4">
+<h4 class="anchored" data-anchor-id="keypad-scanner-1">Keypad Scanner</h4>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="media/schematic-keypad.png" class="img-fluid figure-img"></p>
+<figcaption>Schematic for the keypad scanner.</figcaption>
+</figure>
+</div>
+<p>The figure above shows the schematics of the circuit used to read the 4x4 matrix keypad. The setup uses an open-drain output with 3904 NPN transistors so that row pins are floating when not being interrogated. This allows multiple keypresses to be handled in the same column without causing any contention between different voltages.</p>
+</section>
+</section>
+</section>
+<section id="results-and-discussion" class="level2">
+<h2 class="anchored" data-anchor-id="results-and-discussion">Results and Discussion</h2>
+<section id="testbench-simulation" class="level3">
+<h3 class="anchored" data-anchor-id="testbench-simulation">Testbench Simulation</h3>
+<section id="multiplexed-7-segment-display-top-level" class="level4">
+<h4 class="anchored" data-anchor-id="multiplexed-7-segment-display-top-level">Multiplexed 7-Segment Display Top-Level</h4>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="media/sim-display.png" class="img-fluid figure-img"></p>
+<figcaption>Simulation waveforms for the top-level multiplexed 7-segment display module.</figcaption>
+</figure>
+</div>
+<p>This waveform demonstrates the top-level multiplexed 7-segment module working correctly. In this testbench, <code>MULTIPLEX_PERIOD</code> was set to <code>8</code>, and we the display refreshing every 8 clock cycles. In addition, the output displays the correct segments for different input digits.</p>
+</section>
+<section id="keypad-top-level" class="level4">
+<h4 class="anchored" data-anchor-id="keypad-top-level">Keypad Top-Level</h4>
+<p><img src="media/sim-keypad-1.png" class="img-fluid"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="media/sim-keypad-2.png" class="img-fluid figure-img"></p>
+<figcaption>Simulation waveforms for the top-level keypad scanner module.</figcaption>
+</figure>
+</div>
+<p>These waveforms demonstrate the keypad top-level module working correctly. <code>leds[3:0]</code> is always the inverse of <code>keypad_cols[3:0]</code> (since it is active low). <code>keypad_rows[3:0]</code> is also working correctly with <code>SCAN_DELAY</code> set to <code>8</code>. I only tested a couple cases of <code>keypad_rows</code> because the scanner module is tested more rigorously in the following testbench.</p>
+</section>
+<section id="scanner-module" class="level4">
+<h4 class="anchored" data-anchor-id="scanner-module">Scanner Module</h4>
+<p><img src="media/sim-scanner-1.png" class="img-fluid"></p>
+<p><img src="media/sim-scanner-2.png" class="img-fluid"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="media/sim-scanner-3.png" class="img-fluid figure-img"></p>
+<figcaption>Simulation waveforms for the scanner module.</figcaption>
+</figure>
+</div>
+<p>These waveforms demonstrate all four output transitions, enable, and reset features working correctly. In this testbench, <code>SCAN_DELAY</code> was set to <code>12</code>, so state transitions should happen every 12 clock cycles when enable is HIGH.</p>
+</section>
+</section>
+<section id="hardware" class="level3">
+<h3 class="anchored" data-anchor-id="hardware">Hardware</h3>
+<p>The design met all the intended specifications in hardware:</p>
+<ul>
+<li>FPGA pins are connected in series to current-limiting resistors with the correct calculations.</li>
+<li>The 7-segment display retains the same brightness, regardless of how many segments are lit.</li>
+<li>There is no bleeding or flickering of the display.</li>
+<li>The scanner signal appears on the LEDs correctly and handles multiple keypresses.</li>
+</ul>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>In this lab, I successfully multiplexed a dual 7-segment display and built a scanner module to read inputs from a 4x4 membrane keypad.</p>
+<p>Breakdown of time spent in lab:</p>
+<ul>
+<li><strong>Hardware and circuit design:</strong> ~5 hours</li>
+<li><strong>Verilog:</strong> ~2 hours</li>
+<li><strong>ENTIRE LAB WORKING IN HARDWARE AFTER 7 HOURS</strong></li>
+<li><strong>Documentation and calulcations:</strong> ~5 hours</li>
+<li><strong>Lab writeup:</strong> ~3 hours</li>
+</ul>
+<p><strong>Total time spent:</strong> ~15 hours</p>
+</section>
+<section id="ai-prototype" class="level2">
+<h2 class="anchored" data-anchor-id="ai-prototype">AI Prototype</h2>
+<p>Prompt 1:</p>
+<blockquote class="blockquote">
+<p>Write SystemVerilog HDL to time multiplex a single seven segment decoder (that decodes from four bits to a common anode seven segment display) to decode two sets of input bits and drive two sets of seven output bits.</p>
+</blockquote>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Spoiler: Click to show code
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sv code-with-copy"><code class="sourceCode systemverilog"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> dual_seven_segment #(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> CLK_FREQ_HZ = <span class="dv">12</span>_000_000</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>) (</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span>       clk,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span>       reset_n,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] input_a,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] input_b,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">output</span> <span class="kw">logic</span> [<span class="dv">6</span>:<span class="dv">0</span>] segments_a,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">output</span> <span class="kw">logic</span> [<span class="dv">6</span>:<span class="dv">0</span>] segments_b</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span>       select;</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] decoder_input;</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span> [<span class="dv">6</span>:<span class="dv">0</span>] decoder_output;</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Multiplex the two inputs into the single decoder.</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">always_comb</span> <span class="kw">begin</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="kw">case</span> (select)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>            <span class="bn">1'b0</span>: decoder_input = input_a;</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>            <span class="bn">1'b1</span>: decoder_input = input_b;</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="kw">endcase</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Only one physical decoder is instantiated.</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    seven_segment_decoder decoder (</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        .value    (decoder_input),</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        .segments (decoder_output)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    );</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Alternate between the two inputs and save each decoded result</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">// into its respective output register.</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">always_ff</span> @(<span class="kw">posedge</span> clk <span class="kw">or</span> <span class="kw">negedge</span> reset_n) <span class="kw">begin</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        <span class="kw">if</span> (!reset_n) <span class="kw">begin</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>            select     &lt;= <span class="bn">1'b0</span>;</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>            segments_a &lt;= <span class="bn">7'b1111111</span>;</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>            segments_b &lt;= <span class="bn">7'b1111111</span>;</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        <span class="kw">end</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>        <span class="kw">else</span> <span class="kw">begin</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>            <span class="kw">if</span> (select == <span class="bn">1'b0</span>)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>                segments_a &lt;= decoder_output;</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>            <span class="kw">else</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>                segments_b &lt;= decoder_output;</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>            select &lt;= ~select;</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>        <span class="kw">end</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="kw">endmodule</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sv code-with-copy"><code class="sourceCode systemverilog"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> seven_segment_decoder (</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] value,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">output</span> <span class="kw">logic</span> [<span class="dv">6</span>:<span class="dv">0</span>] segments</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Segment ordering:</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">//</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">//       a</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">//      ---</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   f |   | b</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">//      -g-</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">//   e |   | c</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">//      ---</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">//       d</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">//</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">// segments = {a, b, c, d, e, f, g}</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">//</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Common-anode display:</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">//     0 = segment ON</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">//     1 = segment OFF</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">always_comb</span> <span class="kw">begin</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="kw">case</span> (value)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h0</span>: segments = <span class="bn">7'b0000001</span>;</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h1</span>: segments = <span class="bn">7'b1001111</span>;</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h2</span>: segments = <span class="bn">7'b0010010</span>;</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h3</span>: segments = <span class="bn">7'b0000110</span>;</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h4</span>: segments = <span class="bn">7'b1001100</span>;</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h5</span>: segments = <span class="bn">7'b0100100</span>;</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h6</span>: segments = <span class="bn">7'b0100000</span>;</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h7</span>: segments = <span class="bn">7'b0001111</span>;</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h8</span>: segments = <span class="bn">7'b0000000</span>;</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h9</span>: segments = <span class="bn">7'b0000100</span>;</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'hA</span>: segments = <span class="bn">7'b0001000</span>;</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'hB</span>: segments = <span class="bn">7'b1100000</span>;</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'hC</span>: segments = <span class="bn">7'b0110001</span>;</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'hD</span>: segments = <span class="bn">7'b1000010</span>;</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'hE</span>: segments = <span class="bn">7'b0110000</span>;</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'hF</span>: segments = <span class="bn">7'b0111000</span>;</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>            <span class="kw">default</span>:</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>                segments = <span class="bn">7'b1111111</span>;</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        <span class="kw">endcase</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="kw">endmodule</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p>Some notes:</p>
+<ul>
+<li>After looking through the code, the output seems reasonable. It uses two registers (<code>segments_a</code> and <code>segments_b</code>) to store the decoder outputs for each digit, and alternates between updating each one on every clock cycle.</li>
+<li>I probably would have simplified the <code>always_comb</code> block for setting <code>decoder_input</code> into an <code>assign</code> statement with a ternary operator.</li>
+<li>There is an unused parameter <code>CLK_FREQ_HZ</code> and I’m not sure why it was included in the generated code. ChatGPT acknowledges this parameter is unnecessary and can be removed.</li>
+<li>The code compiles and synthesizes successfully.</li>
+</ul>
+<hr>
+<p>Prompt 2:</p>
+<blockquote class="blockquote">
+<p>Write SystemVerilog HDL to time multiplex a single seven segment decoder (that decodes from four bits to a common anode seven segment display) to decode two sets of input bits and drive two sets of seven output bits. Use the seven segment decoder and oscillator provided in the attached files.</p>
+</blockquote>
+<p>I attached my 7-segment module from Lab 1 as context for the prompt.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Spoiler: Click to show code
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode sv code-with-copy"><code class="sourceCode systemverilog"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> seg7_mux2 (</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span>       clk,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span>       rst_n,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] digit0,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] digit1,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">output</span> <span class="kw">logic</span> [<span class="dv">6</span>:<span class="dv">0</span>] segments0,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">output</span> <span class="kw">logic</span> [<span class="dv">6</span>:<span class="dv">0</span>] segments1</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span>       select;</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] mux_digit;</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span> [<span class="dv">6</span>:<span class="dv">0</span>] decoded_segments;</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Alternate between the two displays on each clock cycle.</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Asynchronous active-low reset selects display 0 initially.</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">always_ff</span> @(<span class="kw">posedge</span> clk <span class="kw">or</span> <span class="kw">negedge</span> rst_n) <span class="kw">begin</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="kw">if</span> (!rst_n)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>            select &lt;= <span class="bn">1'b0</span>;</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="kw">else</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>            select &lt;= ~select;</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Multiplex the two 4-bit inputs into the single decoder.</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">always_comb</span> <span class="kw">begin</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        <span class="kw">if</span> (select)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>            mux_digit = digit1;</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="kw">else</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>            mux_digit = digit0;</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Only one seven-segment decoder is instantiated.</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    seg7 decoder (</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>        .digit    (mux_digit),</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>        .segments (decoded_segments)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    );</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Route the decoder output to the selected display.</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 7'b1111111 turns every segment OFF on a common-anode display.</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="kw">always_comb</span> <span class="kw">begin</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>        segments0 = <span class="bn">7'b1111111</span>;</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>        segments1 = <span class="bn">7'b1111111</span>;</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>        <span class="kw">if</span> (select)</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>            segments1 = decoded_segments;</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>        <span class="kw">else</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>            segments0 = decoded_segments;</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a><span class="kw">endmodule</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p>Some notes:</p>
+<ul>
+<li>The code generated from this prompt is far more questionable from the first. The module uses combinational logic to output the decoded segments, instead of sequential logic like the previous module.</li>
+<li>Because of this change, the behavior of the module is different. The digit not being multiplexed has all its segments turned off, whereas in the previous module, the digit not being multiplexed would simply retain its previous value.</li>
+<li>This behavior is likely unintended because it defeats the purpose of multiplexing in the first place, which is to drive two sets of 7-bit output pins at once. If only one output is being driven at a time, it’s not multiplexing correctly.</li>
+<li>Once again, I would shorten the <code>always_comb</code> block multiplexing between the two input digits to a single <code>assign</code> statement with a ternary operator.</li>
+<li>The code correctly interfaces with the provided <code>seg7</code> module.</li>
+<li>The code synthesizes successfully.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/conjoneshmc\.github\.io\/e155-portfolio\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
