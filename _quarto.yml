@@ -4,19 +4,25 @@ project:
 website:
   title: "E155 Portfolio"
   navbar:
-    background: danger
+    background: "#0b4f27"
     left:
-      - href: index.qmd
-        text: Home
-      - href: labs/index.qmd
-        text: Labs
-      - href: blog.qmd
-        text: Blog
+      - text: Home
+        href: index.qmd
+      - text: Labs
+        menu:
+          - text: Overview
+            href: labs/index.qmd
+          - text: Lab 1
+            href: labs/lab-1/index.qmd
+          - text: Lab 2
+            href: labs/lab-2/index.qmd
+      - text: Blog
+        href: blog.qmd
 
 format:
   html:
     theme:
-      - yeti
-    css: styles.css
+      - cosmo
+      - theme.scss
     toc: true
     toc-depth: 4

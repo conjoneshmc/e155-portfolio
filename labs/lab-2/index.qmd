@@ -99,22 +99,50 @@ The figure above shows the schematics of the circuit used to read the 4x4 matrix
 
 ### Testbench Simulation
 
-TODO
+#### Multiplexed 7-Segment Display Top-Level
+
+![Simulation waveforms for the top-level multiplexed 7-segment display module.](media/sim-display.png)
+
+This waveform demonstrates the top-level multiplexed 7-segment module working correctly. In this testbench, `MULTIPLEX_PERIOD` was set to `8`, and we the display refreshing every 8 clock cycles. In addition, the output displays the correct segments for different input digits.
+
+#### Keypad Top-Level
+
+![](media/sim-keypad-1.png)
+
+![Simulation waveforms for the top-level keypad scanner module.](media/sim-keypad-2.png)
+
+These waveforms demonstrate the keypad top-level module working correctly. `leds[3:0]` is always the inverse of `keypad_cols[3:0]` (since it is active low). `keypad_rows[3:0]` is also working correctly with `SCAN_DELAY` set to `8`. I only tested a couple cases of `keypad_rows` because the scanner module is tested more rigorously in the following testbench.
+
+#### Scanner Module
+
+![](media/sim-scanner-1.png)
+
+![](media/sim-scanner-2.png)
+
+![Simulation waveforms for the scanner module.](media/sim-scanner-3.png)
+
+These waveforms demonstrate all four output transitions, enable, and reset features working correctly. In this testbench, `SCAN_DELAY` was set to `12`, so state transitions should happen every 12 clock cycles when enable is HIGH.
 
 ### Hardware
 
-TODO
+The design met all the intended specifications in hardware:
+
+- FPGA pins are connected in series to current-limiting resistors with the correct calculations.
+- The 7-segment display retains the same brightness, regardless of how many segments are lit.
+- There is no bleeding or flickering of the display.
+- The scanner signal appears on the LEDs correctly and handles multiple keypresses.
 
 ## Conclusion
 
 In this lab, I successfully multiplexed a dual 7-segment display and built a scanner module to read inputs from a 4x4 membrane keypad.
 
 Breakdown of time spent in lab:
+
 - **Hardware and circuit design:** ~5 hours
 - **Verilog:** ~2 hours
 - **ENTIRE LAB WORKING IN HARDWARE AFTER 7 HOURS**
 - **Documentation and calulcations:** ~5 hours
-- **Lab writeup:** ~1 hour
+- **Lab writeup:** ~2 hours
 
 ## AI Prototype
 
@@ -224,6 +252,7 @@ endmodule
 :::
 
 Some notes:
+
 - After looking through the code, the output seems reasonable. It uses two registers (`segments_a` and `segments_b`) to store the decoder outputs for each digit, and alternates between updating each one on every clock cycle.
 - I probably would have simplified the `always_comb` block for setting `decoder_input` into an `assign` statement with a ternary operator.
 - There is an unused parameter `CLK_FREQ_HZ` and I'm not sure why it was included in the generated code. ChatGPT acknowledges this parameter is unnecessary and can be removed.
@@ -294,4 +323,10 @@ endmodule
 :::
 
 Some notes:
-- The code generated from this prompt is far more questionable from the first.
+
+- The code generated from this prompt is far more questionable from the first. The module uses combinational logic to output the decoded segments, instead of sequential logic like the previous module.
+- Because of this change, the behavior of the module is different. The digit not being multiplexed has all its segments turned off, whereas in the previous module, the digit not being multiplexed would simply retain its previous value.
+- This behavior is likely unintended because it defeats the purpose of multiplexing in the first place, which is to drive two sets of 7-bit output pins at once. If only one output is being driven at a time, it's not multiplexing correctly.
+- Once again, I would shorten the `always_comb` block multiplexing between the two input digits to a single `assign` statement with a ternary operator.
+- The code correctly interfaces with the provided `seg7` module.
+- The code synthesizes successfully.
