@@ -142,7 +142,9 @@ Breakdown of time spent in lab:
 - **Verilog:** ~2 hours
 - **ENTIRE LAB WORKING IN HARDWARE AFTER 7 HOURS**
 - **Documentation and calulcations:** ~5 hours
-- **Lab writeup:** ~2 hours
+- **Lab writeup:** ~3 hours
+
+**Total time spent:** ~15 hours
 
 ## AI Prototype
 
