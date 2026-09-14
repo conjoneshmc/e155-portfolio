@@ -10,7 +10,7 @@ author: "Connor Jones"
 
 ## Lab 2: Multiplexed 7-Segment Display
 
-Coming soon...
+[View lab report](./lab-2/index.qmd)
 
 ## Lab 3: Keypad Scanner
 
