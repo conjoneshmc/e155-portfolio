@@ -14,7 +14,7 @@ author: "Connor Jones"
 
 ## Lab 3: Keypad Scanner
 
-Coming soon...
+[View lab report](./lab-3/index.qmd)
 
 ## Lab 4: Digital Audio
 
