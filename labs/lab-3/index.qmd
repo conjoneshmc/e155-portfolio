@@ -124,3 +124,9 @@ In this case, the output goes low for 3 clock cycles and then high for 7 clock c
 ### Keypad Poller
 
 Already verified, same as the `scanner` module from Lab 2.
+
+### Synchronizer
+
+This module synchronizes asynchronous inputs, at the cost of introducing two clock cycles of delay.
+
+![](media/sync-tb.png)
