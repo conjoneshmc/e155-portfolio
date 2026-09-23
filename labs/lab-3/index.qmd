@@ -8,7 +8,89 @@ draft: false
 
 ## Introduction
 
-## Testbenches
+In this lab, I wired up a keypad to an FPGA and displayed the last two button presses on a dual 7-segment display.
+
+
+## Module Design
+
+When designing my approach to this lab, I split my work up across a number of different submodules. In total, I had 12 different modules, although some were re-used from previous labs. This section describes the design approaches I took and the structure of different modules and how they communicate.
+
+### Switch Debouncing
+
+My strategy for switch debouncing was relatively simple: require any changes in an input signal to be held continuously for a certain number of clock cycles before accepting it as the new output. I attached the output of the debouncer to a register, and tied a comparison for equality between the input and output to the reset pin of a counter. That way, when the input matches the output, the counter is held at 0, otherwise the counter starts to increment. If the input is a bounce, it simply resets the counter back to 0. Otherwise, when the maximum count of the counter is reached, the register is enabled and the output gets the value of the input. This also resets the counter back to 0 and holds it there until any further changes are detected.
+
+To avoid any weird shenanigans with multi-touches on the keypad, I created an individual debouncer for each button on the keypad using a `generate` block in SystemVerilog. This was definitely not the most hardware-efficient method available, but it had a massive advantage of making the logic easier to reason through. By putting each button on its own debouncing timer, the keypad polling module can run independently of any button presses. That is, the keypad poller can simply rotate outputs at a fixed delay without stopping at a row when we detect a button press, because even if we start scanning another row while a button is being held, the debouncer for that button will still "remember" the button press.
+
+Another advantage of this debouncing strategy is that it debounces keypad presses as well as keypad releases. This avoids a situation where a button is being held down but mechanical switch bounce causes the program to mistakenly register the key being released and pressed down again.
+
+### FSM Design Strategy
+
+The design and partioning of the FSMs used in this lab is very modular. Each module is responsible for a very specific task and I tried my best to avoid "meshing" two tasks into one module. For example, the module for detecting button presses on the keypad and the module for remembering the last two button presses are separate. This design makes the components built in this lab extremely reusable and adaptable for different use-cases (using my design, it would not be very difficult to modify for a 4-digit display instead of a dual display). This of course, comes at the cost of additional hardware, since there are many additional internal signals present used for submodule connections that could have been optimized away if I put many different functions into the same module.
+
+The hierarchy of my design is as follows:
+
+- `lab3_cj`: The top-level module, which takes in a reset and keypad column pins as inputs, and outputs the keypad row drivers and dual 7-segment display anodes and cathodes. It instantiates an internal clock at 24 MHz and contains the following submodules:
+  - `sync`: Simply used to synchronize the keypad column inputs before passing them to other modules.
+  - `keypad`: The module responsible for managing the keypad state, like what buttons are being pressed and what row pins should be driven. It accepts `cols[3:0]` as an input, drives `rows[3:0]`, and outputs `buttons[3:0][3:0]`, which is a 2D-array containing the pressed state for all 16 buttons on the keypad. It accepts the following parameter: `POLL_DELAY` (how many clock cycles in between each row scan), `SETTLE_DELAY` (how long to ignore the column inputs right after changing rows, this was needed to fix some issues with my debouncer as explained below), and `DEBOUNCE_DELAY`, which is the debounce time for each keypad button. This module contained the following submodules:
+    - `keypad_poller`: Identical to the `scanner` module from Lab 2, it just rotates between pulling each of the row pins low every `POLL_DELAY` cycles.
+    - `keypad_settler`: This was created to solve an issue I had with polling the rows of the keypad too fast. When I first wrote my keypad module, it didn't respond to any button presses. If I increased the polling delay, the keypad would start responding, although much slower. If I decreased the polling delay but held two buttons in the same column (e.g. a `1` and a `4`), the keypad would register a button press for `1` only. Due to these observations, I reasoned that there must be a timing issue with the column pins during a row change that was messing with debouncing timers on each button, and maybe there was some latency between switching rows and actually seeing new values change on the column pins. Therefore, I created this module, which simply instructs the keypad to ignore the column pins entirely for a certain number of clock cycles after each row change. After implementing this module, the keypad worked normally.
+  - `keypad_entry`: This module is responsible for keeping of the last two digits pressed on the keypad. It accepts as input the `buttons[3:0][3:0]` signal from the `keypad` module, and outputs `digit_1[3:0]` and `digit_0[3:0]`. It contains the following submodules:
+    - `keypad_decoder`: Combinational-logic only module that maps keypad rows and columns to hex digits. It also counts the number of buttons being held, for use in the next module.
+    - `keypad_multipress`: A simple state machine containing all the logic for handling multiple button presses, and instructs the `keypad_entry` module when to actually update the display. It accepts the `num_pressed[3:0]` signal from the `keypad_decoder` module, and outputs `should_update` whenever transitioning from a state of no button presses or multi-button presses to a state of single button press.
+  - `seg7_dual`: Simply takes the two hex digits from the output of the `keypad_entry` module and drives the dual 7-segment display.
+
+Design tradeoffs:
+
+- The keypad is very modular, since it outputs what buttons are being held at any given time, not just the last two digits pressed. This means it could be used in any other scenario where we need to read arbitrary button presses.
+- Because of the modularity, the logic contained within each module is relatively simple, and it is easy to trace how data flows between different modules. We don't need to do any weird state logic for the scanner module where we have to temporarily stop scanning and wait for a button press to finish.
+- The keypad module is also extremely hardware inefficient. It needs two copies of 4x4 bit arrays to store the un-debounced and debounced button states, as well as generating _16 copies_ of the debouncer module, which adds even more hardware usage. I probably could've changed the design to only require 4 debouncers, but it would require the `POLL_DELAY` to be slower than the `DEBOUNCE_DELAY` and might make the keypad less responsive.
+
+
+## Block Diagrams
+
+### Top-Level
+
+![](media/block-diagram-top.png)
+
+---
+
+### Debouncer
+
+![](media/block-diagram-debouncer.png)
+
+---
+
+### Keypad
+
+![](media/block-diagram-keypad.png)
+
+---
+
+### Keypad Entry
+
+![](media/block-diagram-keypad-entry.png)
+
+---
+
+### Keypad Multipress Handler
+
+![](media/block-diagram-keypad-multipress.png)
+
+---
+
+### Keypad Settler
+
+![](media/block-diagram-keypad-settler.png)
+
+
+## Schematics
+
+![](media/schematics-1.png)
+
+![](media/schematics-2.png)
+
+
+## Testbenches & Simulation
 
 ### Top-Level
 
@@ -24,10 +106,6 @@ This testbench shows that:
 - The `keypad_buttons` signal is properly connected to the `buttons` input inside of the `keypad_entry` module
 - The `digit_1` and `digit_0` signals are properly connected between the `keypad_entry` and `seg7_dual` modules
 - The `segments` and `anodes` outputs of the `seg7_dual` module are properly connected to their top-level outputs
-
-### Counter
-
-Already verified in Lab 1.
 
 ### Debouncer
 
@@ -98,7 +176,7 @@ This waveform shows the module properly keeping track of the two most recently e
 
 This waveform demonstrates the reset functionality.
 
-### Keypad Multipress
+### Keypad Multipress Handler
 
 Here are the waveforms for the `keypad_multipress` module. This module is responsible for keeping track of how many buttons are being pressed and telling the `keypad_entry` module when to update.
 
@@ -121,12 +199,22 @@ Here are the waveforms for the `keypad_settler` module. This module tells the `k
 
 In this case, the output goes low for 3 clock cycles and then high for 7 clock cycles. The exact period can be configured to line up with the keypad's `POLL_DELAY`.
 
-### Keypad Poller
-
-Already verified, same as the `scanner` module from Lab 2.
-
 ### Synchronizer
 
 This module synchronizes asynchronous inputs, at the cost of introducing two clock cycles of delay.
 
 ![](media/sync-tb.png)
+
+### Already Verified Modules
+
+- `counter`: verified in Lab 1
+- `keypad_poller`: same as the scanner module from Lab 2
+
+
+## Conclusion
+
+After testing the design in hardware, it meets all the proficiency and excellence specifications, including all the edge cases involving multiple button presses.
+
+**Time spent:** 12 hours
+
+The lab was working entirely in hardware after about **5 hours**.
