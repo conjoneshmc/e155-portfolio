@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Connor Jones">
+<meta name="dcterms.date" content="2026-09-20">
+<meta name="description" content="I paid for all the logic elements, I will use all the logic elements">
+
+<title>Lab 3: Keypad Scanner – E155 Portfolio</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-cec5fe2bcc5b78801866de12c7617f02.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-87bffa701a79ed8ec71ae3e9b147f3fa.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">E155 Portfolio</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labs" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Labs</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-labs">    
+        <li>
+    <a class="dropdown-item" href="../../labs/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../labs/lab-1/index.html">
+ <span class="dropdown-text">Lab 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../labs/lab-2/index.html">
+ <span class="dropdown-text">Lab 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../labs/lab-3/index.html">
+ <span class="dropdown-text">Lab 3</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#module-design" id="toc-module-design" class="nav-link" data-scroll-target="#module-design">Module Design</a>
+  <ul>
+  <li><a href="#switch-debouncing" id="toc-switch-debouncing" class="nav-link" data-scroll-target="#switch-debouncing">Switch Debouncing</a></li>
+  <li><a href="#fsm-design-strategy" id="toc-fsm-design-strategy" class="nav-link" data-scroll-target="#fsm-design-strategy">FSM Design Strategy</a></li>
+  </ul></li>
+  <li><a href="#block-diagrams" id="toc-block-diagrams" class="nav-link" data-scroll-target="#block-diagrams">Block Diagrams</a>
+  <ul>
+  <li><a href="#top-level" id="toc-top-level" class="nav-link" data-scroll-target="#top-level">Top-Level</a></li>
+  <li><a href="#debouncer" id="toc-debouncer" class="nav-link" data-scroll-target="#debouncer">Debouncer</a></li>
+  <li><a href="#keypad" id="toc-keypad" class="nav-link" data-scroll-target="#keypad">Keypad</a></li>
+  <li><a href="#keypad-entry" id="toc-keypad-entry" class="nav-link" data-scroll-target="#keypad-entry">Keypad Entry</a></li>
+  <li><a href="#keypad-multipress-handler" id="toc-keypad-multipress-handler" class="nav-link" data-scroll-target="#keypad-multipress-handler">Keypad Multipress Handler</a></li>
+  <li><a href="#keypad-settler" id="toc-keypad-settler" class="nav-link" data-scroll-target="#keypad-settler">Keypad Settler</a></li>
+  </ul></li>
+  <li><a href="#schematics" id="toc-schematics" class="nav-link" data-scroll-target="#schematics">Schematics</a></li>
+  <li><a href="#testbenches-simulation" id="toc-testbenches-simulation" class="nav-link" data-scroll-target="#testbenches-simulation">Testbenches &amp; Simulation</a>
+  <ul>
+  <li><a href="#yosys-synthesis-report" id="toc-yosys-synthesis-report" class="nav-link" data-scroll-target="#yosys-synthesis-report">Yosys Synthesis Report</a></li>
+  <li><a href="#top-level-1" id="toc-top-level-1" class="nav-link" data-scroll-target="#top-level-1">Top-Level</a></li>
+  <li><a href="#debouncer-1" id="toc-debouncer-1" class="nav-link" data-scroll-target="#debouncer-1">Debouncer</a></li>
+  <li><a href="#keypad-1" id="toc-keypad-1" class="nav-link" data-scroll-target="#keypad-1">Keypad</a></li>
+  <li><a href="#keypad-decoder" id="toc-keypad-decoder" class="nav-link" data-scroll-target="#keypad-decoder">Keypad Decoder</a></li>
+  <li><a href="#keypad-entry-1" id="toc-keypad-entry-1" class="nav-link" data-scroll-target="#keypad-entry-1">Keypad Entry</a></li>
+  <li><a href="#keypad-multipress-handler-1" id="toc-keypad-multipress-handler-1" class="nav-link" data-scroll-target="#keypad-multipress-handler-1">Keypad Multipress Handler</a></li>
+  <li><a href="#keypad-settler-1" id="toc-keypad-settler-1" class="nav-link" data-scroll-target="#keypad-settler-1">Keypad Settler</a></li>
+  <li><a href="#synchronizer" id="toc-synchronizer" class="nav-link" data-scroll-target="#synchronizer">Synchronizer</a></li>
+  <li><a href="#already-verified-modules" id="toc-already-verified-modules" class="nav-link" data-scroll-target="#already-verified-modules">Already Verified Modules</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#ai-prototype" id="toc-ai-prototype" class="nav-link" data-scroll-target="#ai-prototype">AI Prototype</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lab 3: Keypad Scanner</h1>
+</div>
+
+<div>
+  <div class="description">
+    I paid for all the logic elements, I will use all the logic elements
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Connor Jones </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 20, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In this lab, I wired up a keypad to an FPGA and displayed the last two button presses on a dual 7-segment display.</p>
+</section>
+<section id="module-design" class="level2">
+<h2 class="anchored" data-anchor-id="module-design">Module Design</h2>
+<p><a href="https://github.com/conjoneshmc/e155-labs/tree/main/lab-3">The code for this lab can be found at this repository.</a></p>
+<p>When designing my approach to this lab, I split my work up across a number of different submodules. In total, I had 12 different modules, although some were re-used from previous labs. This section describes the design approaches I took and the structure of different modules and how they communicate.</p>
+<section id="switch-debouncing" class="level3">
+<h3 class="anchored" data-anchor-id="switch-debouncing">Switch Debouncing</h3>
+<p>My strategy for switch debouncing was relatively simple: require any changes in an input signal to be held continuously for a certain number of clock cycles before accepting it as the new output. I attached the output of the debouncer to a register, and tied a comparison for equality between the input and output to the reset pin of a counter. That way, when the input matches the output, the counter is held at 0, otherwise the counter starts to increment. If the input is a bounce, it simply resets the counter back to 0. Otherwise, when the maximum count of the counter is reached, the register is enabled and the output gets the value of the input. This also resets the counter back to 0 and holds it there until any further changes are detected.</p>
+<p>To avoid any weird shenanigans with multi-touches on the keypad, I created an individual debouncer for each button on the keypad using a <code>generate</code> block in SystemVerilog. This was definitely not the most hardware-efficient method available, but it had a massive advantage of making the logic easier to reason through. By putting each button on its own debouncing timer, the keypad polling module can run independently of any button presses. That is, the keypad poller can simply rotate outputs at a fixed delay without stopping at a row when we detect a button press, because even if we start scanning another row while a button is being held, the debouncer for that button will still “remember” the button press.</p>
+<p>Another advantage of this debouncing strategy is that it debounces keypad presses as well as keypad releases. This avoids a situation where a button is being held down but mechanical switch bounce causes the program to mistakenly register the key being released and pressed down again.</p>
+</section>
+<section id="fsm-design-strategy" class="level3">
+<h3 class="anchored" data-anchor-id="fsm-design-strategy">FSM Design Strategy</h3>
+<p>The design and partioning of the FSMs used in this lab is very modular. Each module is responsible for a very specific task and I tried my best to avoid “meshing” two tasks into one module. For example, the module for detecting button presses on the keypad and the module for remembering the last two button presses are separate. This design makes the components built in this lab extremely reusable and adaptable for different use-cases (using my design, it would not be very difficult to modify for a 4-digit display instead of a dual display). This of course, comes at the cost of additional hardware, since there are many additional internal signals present used for submodule connections that could have been optimized away if I put many different functions into the same module.</p>
+<p>The hierarchy of my design is as follows:</p>
+<ul>
+<li><code>lab3_cj</code>: The top-level module, which takes in a reset and keypad column pins as inputs, and outputs the keypad row drivers and dual 7-segment display anodes and cathodes. It instantiates an internal clock at 24 MHz and contains the following submodules:
+<ul>
+<li><code>sync</code>: Simply used to synchronize the keypad column inputs before passing them to other modules.</li>
+<li><code>keypad</code>: The module responsible for managing the keypad state, like what buttons are being pressed and what row pins should be driven. It accepts <code>cols[3:0]</code> as an input, drives <code>rows[3:0]</code>, and outputs <code>buttons[3:0][3:0]</code>, which is a 2D-array containing the pressed state for all 16 buttons on the keypad. It accepts the following parameter: <code>POLL_DELAY</code> (how many clock cycles in between each row scan), <code>SETTLE_DELAY</code> (how long to ignore the column inputs right after changing rows, this was needed to fix some issues with my debouncer as explained below), and <code>DEBOUNCE_DELAY</code>, which is the debounce time for each keypad button. This module contained the following submodules:
+<ul>
+<li><code>keypad_poller</code>: Identical to the <code>scanner</code> module from Lab 2, it just rotates between pulling each of the row pins low every <code>POLL_DELAY</code> cycles.</li>
+<li><code>keypad_settler</code>: This was created to solve an issue I had with polling the rows of the keypad too fast. When I first wrote my keypad module, it didn’t respond to any button presses. If I increased the polling delay, the keypad would start responding, although much slower. If I decreased the polling delay but held two buttons in the same column (e.g.&nbsp;a <code>1</code> and a <code>4</code>), the keypad would register a button press for <code>1</code> only. Due to these observations, I reasoned that there must be a timing issue with the column pins during a row change that was messing with debouncing timers on each button, and maybe there was some latency between switching rows and actually seeing new values change on the column pins. Therefore, I created this module, which simply instructs the keypad to ignore the column pins entirely for a certain number of clock cycles after each row change. After implementing this module, the keypad worked normally.</li>
+</ul></li>
+<li><code>keypad_entry</code>: This module is responsible for keeping of the last two digits pressed on the keypad. It accepts as input the <code>buttons[3:0][3:0]</code> signal from the <code>keypad</code> module, and outputs <code>digit_1[3:0]</code> and <code>digit_0[3:0]</code>. It contains the following submodules:
+<ul>
+<li><code>keypad_decoder</code>: Combinational-logic only module that maps keypad rows and columns to hex digits. It also counts the number of buttons being held, for use in the next module.</li>
+<li><code>keypad_multipress</code>: A simple state machine containing all the logic for handling multiple button presses, and instructs the <code>keypad_entry</code> module when to actually update the display. It accepts the <code>num_pressed[3:0]</code> signal from the <code>keypad_decoder</code> module, and outputs <code>should_update</code> whenever transitioning from a state of no button presses or multi-button presses to a state of single button press.</li>
+</ul></li>
+<li><code>seg7_dual</code>: Simply takes the two hex digits from the output of the <code>keypad_entry</code> module and drives the dual 7-segment display.</li>
+</ul></li>
+</ul>
+<p>Design tradeoffs:</p>
+<ul>
+<li>The keypad is very modular, since it outputs what buttons are being held at any given time, not just the last two digits pressed. This means it could be used in any other scenario where we need to read arbitrary button presses.</li>
+<li>Because of the modularity, the logic contained within each module is relatively simple, and it is easy to trace how data flows between different modules. We don’t need to do any weird state logic for the scanner module where we have to temporarily stop scanning and wait for a button press to finish.</li>
+<li>The keypad module is also extremely hardware inefficient. It needs two copies of 4x4 bit arrays to store the un-debounced and debounced button states, as well as generating <em>16 copies</em> of the debouncer module, which adds even more hardware usage. I probably could’ve changed the design to only require 4 debouncers, but it would require the <code>POLL_DELAY</code> to be slower than the <code>DEBOUNCE_DELAY</code> and might make the keypad less responsive.</li>
+</ul>
+</section>
+</section>
+<section id="block-diagrams" class="level2">
+<h2 class="anchored" data-anchor-id="block-diagrams">Block Diagrams</h2>
+<section id="top-level" class="level3">
+<h3 class="anchored" data-anchor-id="top-level">Top-Level</h3>
+<p><img src="media/block-diagram-top.png" class="img-fluid"></p>
+<hr>
+</section>
+<section id="debouncer" class="level3">
+<h3 class="anchored" data-anchor-id="debouncer">Debouncer</h3>
+<p><img src="media/block-diagram-debouncer.png" class="img-fluid"></p>
+<hr>
+</section>
+<section id="keypad" class="level3">
+<h3 class="anchored" data-anchor-id="keypad">Keypad</h3>
+<p><img src="media/block-diagram-keypad.png" class="img-fluid"></p>
+<hr>
+</section>
+<section id="keypad-entry" class="level3">
+<h3 class="anchored" data-anchor-id="keypad-entry">Keypad Entry</h3>
+<p><img src="media/block-diagram-keypad-entry.png" class="img-fluid"></p>
+<hr>
+</section>
+<section id="keypad-multipress-handler" class="level3">
+<h3 class="anchored" data-anchor-id="keypad-multipress-handler">Keypad Multipress Handler</h3>
+<p><img src="media/block-diagram-keypad-multipress.png" class="img-fluid"></p>
+<hr>
+</section>
+<section id="keypad-settler" class="level3">
+<h3 class="anchored" data-anchor-id="keypad-settler">Keypad Settler</h3>
+<p><img src="media/block-diagram-keypad-settler.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="schematics" class="level2">
+<h2 class="anchored" data-anchor-id="schematics">Schematics</h2>
+<p><img src="media/schematics-1.png" class="img-fluid"></p>
+<p><img src="media/schematics-2.png" class="img-fluid"></p>
+</section>
+<section id="testbenches-simulation" class="level2">
+<h2 class="anchored" data-anchor-id="testbenches-simulation">Testbenches &amp; Simulation</h2>
+<section id="yosys-synthesis-report" class="level3">
+<h3 class="anchored" data-anchor-id="yosys-synthesis-report">Yosys Synthesis Report</h3>
+<p><img src="media/yosys-report.png" class="img-fluid"></p>
+<p>The synthesis report from <code>yosys</code> (the open-source synthesizer I used) reports no latch cells or tri-state buffers.</p>
+</section>
+<section id="top-level-1" class="level3">
+<h3 class="anchored" data-anchor-id="top-level-1">Top-Level</h3>
+<p>Here is the top-level testbench responsible for verifying all the connections between submodules. Note that some of the timing parameters were changed for the testbench because many were on the order of tens of thousands of clock cycles, which would make the waveforms unreadable.</p>
+<p><img src="media/top-tb.png" class="img-fluid"></p>
+<p>This testbench shows that:</p>
+<ul>
+<li><code>clk</code> is always connected to the <code>clk</code> ports of each submodule (<code>sync</code>, <code>keypad</code>, <code>keypad_entry</code>, <code>seg7_dual</code>)</li>
+<li>The <code>keypad_cols</code> and <code>keypad_rows</code> signals are properly connected to the <code>keypad</code> module
+<ul>
+<li>Note that <code>keypad_cols</code> (internal signal) lags behind <code>n_keypad_cols</code> (top-level-input) because it has to go through the synchronizer first, so any updates are always a couple clock cycles late</li>
+</ul></li>
+<li>The <code>keypad_buttons</code> signal is properly connected to the <code>buttons</code> input inside of the <code>keypad_entry</code> module</li>
+<li>The <code>digit_1</code> and <code>digit_0</code> signals are properly connected between the <code>keypad_entry</code> and <code>seg7_dual</code> modules</li>
+<li>The <code>segments</code> and <code>anodes</code> outputs of the <code>seg7_dual</code> module are properly connected to their top-level outputs</li>
+</ul>
+</section>
+<section id="debouncer-1" class="level3">
+<h3 class="anchored" data-anchor-id="debouncer-1">Debouncer</h3>
+<p>Here are the waveforms for the <code>debouncer</code> module. This is responsible for filtering out switch bounce from keypad presses by requiring a change in the input to be held for a continuous number of clock cycles before updating the output.</p>
+<p><img src="media/debouncer-tb-1.png" class="img-fluid"></p>
+<p>This waveform demonstrates the basic functionality of the debouncer. When <code>in</code> changes, <code>out</code> doesn’t follow until the debounce delay has elapsed. In this case, the delay is 14 clock cycles.</p>
+<p><img src="media/debouncer-tb-2.png" class="img-fluid"></p>
+<p>This waveform demonstrates correct functionality even when an input changes right on top of a rising clock signal.</p>
+<p><img src="media/debouncer-tb-3.png" class="img-fluid"></p>
+<p>This waveform demonstrates the reset functionality.</p>
+<p><img src="media/debouncer-tb-4.png" class="img-fluid"></p>
+<p>This waveform demonstrates correct functionality in response to a simulated mechanical switch bounce. Inputs change at different times relative to the clock signal, but the output doesn’t go high because the debouncer rejects the changes as noise.</p>
+<p><img src="media/debouncer-tb-5.png" class="img-fluid"></p>
+<p>This waveform demonstrates the enable functionality. When the debouncer is disabled, it simply maintains its output while ignoring any changes to the input.</p>
+</section>
+<section id="keypad-1" class="level3">
+<h3 class="anchored" data-anchor-id="keypad-1">Keypad</h3>
+<p>Here are the waveforms:</p>
+<p><img src="media/keypad-tb-1.png" class="img-fluid"></p>
+<p><img src="media/keypad-tb-2.png" class="img-fluid"></p>
+<p><img src="media/keypad-tb-3.png" class="img-fluid"></p>
+<p><img src="media/keypad-tb-4.png" class="img-fluid"></p>
+</section>
+<section id="keypad-decoder" class="level3">
+<h3 class="anchored" data-anchor-id="keypad-decoder">Keypad Decoder</h3>
+<p>Here are the waveforms for the <code>keypad_decoder</code> module. This module only consists of combinational logic to map keypad button locations to hexadecimal digits. It also counts the number of buttons being pressed.</p>
+<p><img src="media/keypad-decoder-tb-1.png" class="img-fluid"></p>
+<p><img src="media/keypad-decoder-tb-2.png" class="img-fluid"></p>
+<p><img src="media/keypad-decoder-tb-3.png" class="img-fluid"></p>
+<p>These waveforms exercise all possible 16 branches of the combinational logic (one for each button). It also tests a couple cases involving different numbers of buttons being pressed.</p>
+</section>
+<section id="keypad-entry-1" class="level3">
+<h3 class="anchored" data-anchor-id="keypad-entry-1">Keypad Entry</h3>
+<p>Here are the waveforms for the <code>keypad_entry</code> module. This module is responsible for keeping track of the last two digits entered on the keypad.</p>
+<p><img src="media/keypad-entry-tb-1.png" class="img-fluid"></p>
+<p>This waveform demonstrates basic functionality of the module:</p>
+<ul>
+<li>At 30ns, the module updates the rightmost digit to a <code>3</code> in response to the corresponding button being pressed</li>
+<li>At 35ns, the button <code>B</code> is held down in addition to <code>3</code>. The module rejects this additional keypress as per the specs</li>
+<li>At 55ns, the button <code>3</code> is released. This causes the keypad to transition from a multi-press state to a single-press state, which should register an additional keypress in accordance with the specs</li>
+<li>At 70ns, the display updates with <code>B</code> as the rightmost digit and moves the <code>3</code> over to the leftmost digit</li>
+</ul>
+<p><img src="media/keypad-entry-tb-2.png" class="img-fluid"></p>
+<p>This waveform shows the module properly keeping track of the two most recently entered digits on the keypad, with the most recent digit appearing on the right (<code>digit_0</code>).</p>
+<p><img src="media/keypad-entry-tb-3.png" class="img-fluid"></p>
+<p>This waveform demonstrates the reset functionality.</p>
+</section>
+<section id="keypad-multipress-handler-1" class="level3">
+<h3 class="anchored" data-anchor-id="keypad-multipress-handler-1">Keypad Multipress Handler</h3>
+<p>Here are the waveforms for the <code>keypad_multipress</code> module. This module is responsible for keeping track of how many buttons are being pressed and telling the <code>keypad_entry</code> module when to update.</p>
+<p><img src="media/keypad-multipress-tb.png" class="img-fluid"></p>
+<p>This waveform demonstrates the key state transitions of the module:</p>
+<ul>
+<li>going from 0 presses to 1 press</li>
+<li>going from 1 press to multiple presses</li>
+<li>going from multiple presses to 1 press</li>
+<li>going from 1 press to 0 presses</li>
+</ul>
+<p>The module only outputs <code>should_update</code> when entering the 1-press state from a 0-press or multi-press condition.</p>
+</section>
+<section id="keypad-settler-1" class="level3">
+<h3 class="anchored" data-anchor-id="keypad-settler-1">Keypad Settler</h3>
+<p>Here are the waveforms for the <code>keypad_settler</code> module. This module tells the <code>keypad</code> module not to look at the column inputs right after a row change, because I was running into issues polling the keypad rows too fast.</p>
+<p><img src="media/keypad-settler-tb.png" class="img-fluid"></p>
+<p>In this case, the output goes low for 3 clock cycles and then high for 7 clock cycles. The exact period can be configured to line up with the keypad’s <code>POLL_DELAY</code>.</p>
+</section>
+<section id="synchronizer" class="level3">
+<h3 class="anchored" data-anchor-id="synchronizer">Synchronizer</h3>
+<p>This module synchronizes asynchronous inputs, at the cost of introducing two clock cycles of delay.</p>
+<p><img src="media/sync-tb.png" class="img-fluid"></p>
+</section>
+<section id="already-verified-modules" class="level3">
+<h3 class="anchored" data-anchor-id="already-verified-modules">Already Verified Modules</h3>
+<ul>
+<li><code>counter</code>: verified in Lab 1</li>
+<li><code>keypad_poller</code>: same as the scanner module from Lab 2</li>
+</ul>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>After testing the design in hardware, it meets all the specifications, including all the edge cases involving multiple button presses.</p>
+<p><strong>Time spent:</strong> 13 hours</p>
+<p>The lab was working entirely in hardware after about <strong>5 hours</strong>.</p>
+</section>
+<section id="ai-prototype" class="level2">
+<h2 class="anchored" data-anchor-id="ai-prototype">AI Prototype</h2>
+<p>Prompt 1:</p>
+<blockquote class="blockquote">
+<p>Target device: Lattice iCE40 UP5K FPGA with internal high-speed oscillator (~20 MHz).</p>
+<p>Write synthesizable SystemVerilog to scan a 4x4 matrix keypad and display the last two hex keys pressed on a dual 7‑segment display. Implement:</p>
+<ul>
+<li>A clock divider that derives a scan clock on the order of 100–200 Hz from the internal oscillator.</li>
+<li>A keypad scanning controller that iterates one active‑low column at a time and samples active‑low rows, registering at most one key per press (debounce‑by‑design), ignoring additional presses while any key is held, and allowing a new registration only after release.</li>
+<li>A top level that updates two hex digits (older and most recent) when a new key is registered and drives a time‑multiplexed two‑digit 7‑segment display without visible flicker and with balanced brightness.</li>
+</ul>
+<p>Use idiomatic SystemVerilog (e.g., logic, always_ff, enumerated states for FSMs). Provide clean module boundaries and keep all state synchronous. Include brief comments explaining the design choices.</p>
+</blockquote>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Spoiler: Click to show code
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode sv code-with-copy"><code class="sourceCode systemverilog"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// All state uses the 24 MHz oscillator clock. Hold reset high during</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">// startup, then deassert it synchronously to the oscillator clock.</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> periodic_enable #(</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> CLOCK_HZ = <span class="dv">24</span>_000_000,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> RATE_HZ  = <span class="dv">200</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>) (</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span> clk,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span> reset,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">output</span> <span class="kw">logic</span> tick</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">localparam</span> <span class="kw">int</span> <span class="kw">unsigned</span> COUNT_MAX = CLOCK_HZ / RATE_HZ;</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">localparam</span> <span class="kw">int</span> <span class="kw">unsigned</span> WIDTH = <span class="kw">$clog2</span>(COUNT_MAX);</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span> [WIDTH<span class="dv">-1</span>:<span class="dv">0</span>] count;</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">always_ff</span> @(<span class="kw">posedge</span> clk) <span class="kw">begin</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="kw">if</span> (reset) <span class="kw">begin</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>            count &lt;= '<span class="dv">0</span>;</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            tick  &lt;= <span class="bn">1'b0</span>;</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="kw">end</span> <span class="kw">else</span> <span class="kw">if</span> (count == COUNT_MAX - <span class="dv">1</span>) <span class="kw">begin</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>            count &lt;= '<span class="dv">0</span>;</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>            tick  &lt;= <span class="bn">1'b1</span>;</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        <span class="kw">end</span> <span class="kw">else</span> <span class="kw">begin</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>            count &lt;= count + <span class="bn">1'b1</span>;</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>            tick  &lt;= <span class="bn">1'b0</span>;</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        <span class="kw">end</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="kw">endmodule</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> keypad_scanner (</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span>       clk,</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span>       reset,</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span>       scan_tick,</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] rows_n,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="kw">output</span> <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] cols_n,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">output</span> <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] key,</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">output</span> <span class="kw">logic</span>       key_valid</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="kw">typedef</span> <span class="kw">enum</span> <span class="kw">logic</span> [<span class="dv">1</span>:<span class="dv">0</span>] {</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>        WAIT_PRESS, CONFIRM_PRESS, WAIT_RELEASE, CONFIRM_RELEASE</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    } state_t;</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    state_t <span class="ot">state</span>;</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span> [<span class="dv">1</span>:<span class="dv">0</span>] column;</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] rows_meta, rows_sync;</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span>       frame_any;</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] frame_key, candidate;</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span>       sample_any;</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] sample_key;</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Synchronize the asynchronous keypad inputs before sampling them.</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    <span class="kw">always_ff</span> @(<span class="kw">posedge</span> clk) <span class="kw">begin</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>        <span class="kw">if</span> (reset) <span class="kw">begin</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>            rows_meta &lt;= <span class="bn">4'hF</span>;</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>            rows_sync &lt;= <span class="bn">4'hF</span>;</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>        <span class="kw">end</span> <span class="kw">else</span> <span class="kw">begin</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>            rows_meta &lt;= rows_n;</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>            rows_sync &lt;= rows_meta;</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>        <span class="kw">end</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Exactly one column is low. It remains selected for 5 ms before</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>    <span class="co">// its rows are sampled and the next column is selected.</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>    <span class="kw">always_comb</span> <span class="kw">begin</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>        cols_n = <span class="bn">4'hF</span>;</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>        cols_n[column] = <span class="bn">1'b0</span>;</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>        sample_any = (rows_sync != <span class="bn">4'hF</span>);</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>        sample_key = {column, <span class="bn">2'b00</span>};</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>        <span class="kw">if</span>      (!rows_sync[<span class="dv">0</span>]) sample_key[<span class="dv">1</span>:<span class="dv">0</span>] = <span class="bn">2'd0</span>;</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>        <span class="kw">else</span> <span class="kw">if</span> (!rows_sync[<span class="dv">1</span>]) sample_key[<span class="dv">1</span>:<span class="dv">0</span>] = <span class="bn">2'd1</span>;</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>        <span class="kw">else</span> <span class="kw">if</span> (!rows_sync[<span class="dv">2</span>]) sample_key[<span class="dv">1</span>:<span class="dv">0</span>] = <span class="bn">2'd2</span>;</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>        <span class="kw">else</span>                    sample_key[<span class="dv">1</span>:<span class="dv">0</span>] = <span class="bn">2'd3</span>;</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>    <span class="kw">always_ff</span> @(<span class="kw">posedge</span> clk) <span class="kw">begin</span></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>        <span class="kw">if</span> (reset) <span class="kw">begin</span></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>            column    &lt;= <span class="bn">2'd0</span>;</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>            frame_any &lt;= <span class="bn">1'b0</span>;</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>            frame_key &lt;= <span class="bn">4'd0</span>;</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>            candidate &lt;= <span class="bn">4'd0</span>;</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>            <span class="ot">state</span>     &lt;= WAIT_PRESS;</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>            key       &lt;= <span class="bn">4'd0</span>;</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>            key_valid &lt;= <span class="bn">1'b0</span>;</span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>        <span class="kw">end</span> <span class="kw">else</span> <span class="kw">begin</span></span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>            key_valid &lt;= <span class="bn">1'b0</span>; <span class="co">// One system-clock pulse per accepted key.</span></span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>            <span class="kw">if</span> (scan_tick) <span class="kw">begin</span></span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>                <span class="kw">if</span> (sample_any &amp;&amp; !frame_any)</span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>                    frame_key &lt;= sample_key;</span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a>                <span class="kw">if</span> (column == <span class="bn">2'd3</span>) <span class="kw">begin</span></span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a>                    <span class="co">// Current sample completes the four-column frame.</span></span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">case</span> (<span class="ot">state</span>)</span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>                        WAIT_PRESS: <span class="kw">begin</span></span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>                            <span class="kw">if</span> (frame_any || sample_any) <span class="kw">begin</span></span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>                                candidate &lt;= frame_any ? frame_key : sample_key;</span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>                                <span class="ot">state</span>     &lt;= CONFIRM_PRESS;</span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>                            <span class="kw">end</span></span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">end</span></span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>                        CONFIRM_PRESS: <span class="kw">begin</span></span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a>                            <span class="kw">if</span> (!(frame_any || sample_any)) <span class="kw">begin</span></span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>                                <span class="ot">state</span> &lt;= WAIT_PRESS;</span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>                            <span class="kw">end</span> <span class="kw">else</span> <span class="kw">if</span> ((frame_any ? frame_key : sample_key)</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>                                         == candidate) <span class="kw">begin</span></span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>                                key       &lt;= candidate;</span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>                                key_valid &lt;= <span class="bn">1'b1</span>;</span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>                                <span class="ot">state</span>     &lt;= WAIT_RELEASE;</span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a>                            <span class="kw">end</span> <span class="kw">else</span> <span class="kw">begin</span></span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>                                candidate &lt;= frame_any ? frame_key : sample_key;</span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>                            <span class="kw">end</span></span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">end</span></span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a>                        WAIT_RELEASE: <span class="kw">begin</span></span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a>                            <span class="kw">if</span> (!(frame_any || sample_any))</span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a>                                <span class="ot">state</span> &lt;= CONFIRM_RELEASE;</span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">end</span></span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>                        CONFIRM_RELEASE: <span class="kw">begin</span></span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>                            <span class="kw">if</span> (frame_any || sample_any)</span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>                                <span class="ot">state</span> &lt;= WAIT_RELEASE;</span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>                            <span class="kw">else</span></span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a>                                <span class="ot">state</span> &lt;= WAIT_PRESS;</span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">end</span></span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">default</span>: <span class="ot">state</span> &lt;= WAIT_PRESS;</span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">endcase</span></span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a>                    frame_any &lt;= <span class="bn">1'b0</span>;</span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>                    column    &lt;= <span class="bn">2'd0</span>;</span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a>                <span class="kw">end</span> <span class="kw">else</span> <span class="kw">begin</span></span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a>                    frame_any &lt;= frame_any || sample_any;</span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a>                    column    &lt;= column + <span class="bn">2'd1</span>;</span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a>                <span class="kw">end</span></span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>            <span class="kw">end</span></span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>        <span class="kw">end</span></span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a><span class="kw">endmodule</span></span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> hex_seven_segment (</span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] hex,</span>
+<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a>    <span class="kw">output</span> <span class="kw">logic</span> [<span class="dv">6</span>:<span class="dv">0</span>] segments_n  <span class="co">// {a,b,c,d,e,f,g}, active low</span></span>
+<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a>    <span class="kw">always_comb</span> <span class="kw">begin</span></span>
+<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a>        <span class="kw">case</span> (hex)</span>
+<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h0</span>: segments_n = <span class="bn">7'b0000001</span>;</span>
+<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h1</span>: segments_n = <span class="bn">7'b1001111</span>;</span>
+<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h2</span>: segments_n = <span class="bn">7'b0010010</span>;</span>
+<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h3</span>: segments_n = <span class="bn">7'b0000110</span>;</span>
+<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h4</span>: segments_n = <span class="bn">7'b1001100</span>;</span>
+<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h5</span>: segments_n = <span class="bn">7'b0100100</span>;</span>
+<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h6</span>: segments_n = <span class="bn">7'b0100000</span>;</span>
+<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h7</span>: segments_n = <span class="bn">7'b0001111</span>;</span>
+<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h8</span>: segments_n = <span class="bn">7'b0000000</span>;</span>
+<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'h9</span>: segments_n = <span class="bn">7'b0000100</span>;</span>
+<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'hA</span>: segments_n = <span class="bn">7'b0001000</span>;</span>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'hB</span>: segments_n = <span class="bn">7'b1100000</span>;</span>
+<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'hC</span>: segments_n = <span class="bn">7'b0110001</span>;</span>
+<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'hD</span>: segments_n = <span class="bn">7'b1000010</span>;</span>
+<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a>            <span class="bn">4'hE</span>: segments_n = <span class="bn">7'b0110000</span>;</span>
+<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a>            <span class="kw">default</span>: segments_n = <span class="bn">7'b0111000</span>; <span class="co">// F</span></span>
+<span id="cb1-163"><a href="#cb1-163" aria-hidden="true" tabindex="-1"></a>        <span class="kw">endcase</span></span>
+<span id="cb1-164"><a href="#cb1-164" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a><span class="kw">endmodule</span></span>
+<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> keypad_hex_display (</span>
+<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span>       reset,      <span class="co">// Active-high synchronous reset</span></span>
+<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] rows_n,     <span class="co">// Active-low; external pull-ups required</span></span>
+<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a>    <span class="kw">output</span> <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] cols_n,</span>
+<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a>    <span class="kw">output</span> <span class="kw">logic</span> [<span class="dv">6</span>:<span class="dv">0</span>] segments_n, <span class="co">// Shared, active-low segment outputs</span></span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a>    <span class="kw">output</span> <span class="kw">logic</span> [<span class="dv">1</span>:<span class="dv">0</span>] digit_n     <span class="co">// {older, newest}, active low</span></span>
+<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span> clk;</span>
+<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span> scan_tick, display_tick;</span>
+<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] key, older, newest, displayed_hex;</span>
+<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span> key_valid, select_newest;</span>
+<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a>    SB_HFOSC #<span class="dt">(.CLKHF_DIV</span>(<span class="st">"0b01"</span>)) oscillator (</span>
+<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a>        .CLKHFPU(<span class="bn">1'b1</span>),</span>
+<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a>        .CLKHFEN(<span class="bn">1'b1</span>),</span>
+<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a>        .CLKHF(clk)</span>
+<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a>    );</span>
+<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a>    periodic_enable #<span class="dt">(.RATE_HZ</span>(<span class="dv">200</span>)) scan_rate (</span>
+<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a>        .clk(clk),<span class="dt"> .reset</span>(reset),<span class="dt"> .tick</span>(scan_tick)</span>
+<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a>    );</span>
+<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a>    periodic_enable #<span class="dt">(.RATE_HZ</span>(<span class="dv">1</span>_000)) display_rate (</span>
+<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a>        .clk(clk),<span class="dt"> .reset</span>(reset),<span class="dt"> .tick</span>(display_tick)</span>
+<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a>    );</span>
+<span id="cb1-192"><a href="#cb1-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-193"><a href="#cb1-193" aria-hidden="true" tabindex="-1"></a>    keypad_scanner scanner (</span>
+<span id="cb1-194"><a href="#cb1-194" aria-hidden="true" tabindex="-1"></a>        .clk(clk),<span class="dt"> .reset</span>(reset),<span class="dt"> .scan_tick</span>(scan_tick),</span>
+<span id="cb1-195"><a href="#cb1-195" aria-hidden="true" tabindex="-1"></a>        .rows_n(rows_n),<span class="dt"> .cols_n</span>(cols_n),</span>
+<span id="cb1-196"><a href="#cb1-196" aria-hidden="true" tabindex="-1"></a>        .key(key),<span class="dt"> .key_valid</span>(key_valid)</span>
+<span id="cb1-197"><a href="#cb1-197" aria-hidden="true" tabindex="-1"></a>    );</span>
+<span id="cb1-198"><a href="#cb1-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-199"><a href="#cb1-199" aria-hidden="true" tabindex="-1"></a>    <span class="kw">always_ff</span> @(<span class="kw">posedge</span> clk) <span class="kw">begin</span></span>
+<span id="cb1-200"><a href="#cb1-200" aria-hidden="true" tabindex="-1"></a>        <span class="kw">if</span> (reset) <span class="kw">begin</span></span>
+<span id="cb1-201"><a href="#cb1-201" aria-hidden="true" tabindex="-1"></a>            older         &lt;= <span class="bn">4'h0</span>;</span>
+<span id="cb1-202"><a href="#cb1-202" aria-hidden="true" tabindex="-1"></a>            newest        &lt;= <span class="bn">4'h0</span>;</span>
+<span id="cb1-203"><a href="#cb1-203" aria-hidden="true" tabindex="-1"></a>            select_newest &lt;= <span class="bn">1'b0</span>;</span>
+<span id="cb1-204"><a href="#cb1-204" aria-hidden="true" tabindex="-1"></a>        <span class="kw">end</span> <span class="kw">else</span> <span class="kw">begin</span></span>
+<span id="cb1-205"><a href="#cb1-205" aria-hidden="true" tabindex="-1"></a>            <span class="kw">if</span> (key_valid) <span class="kw">begin</span></span>
+<span id="cb1-206"><a href="#cb1-206" aria-hidden="true" tabindex="-1"></a>                older  &lt;= newest;</span>
+<span id="cb1-207"><a href="#cb1-207" aria-hidden="true" tabindex="-1"></a>                newest &lt;= key;</span>
+<span id="cb1-208"><a href="#cb1-208" aria-hidden="true" tabindex="-1"></a>            <span class="kw">end</span></span>
+<span id="cb1-209"><a href="#cb1-209" aria-hidden="true" tabindex="-1"></a>            <span class="kw">if</span> (display_tick)</span>
+<span id="cb1-210"><a href="#cb1-210" aria-hidden="true" tabindex="-1"></a>                select_newest &lt;= ~select_newest;</span>
+<span id="cb1-211"><a href="#cb1-211" aria-hidden="true" tabindex="-1"></a>        <span class="kw">end</span></span>
+<span id="cb1-212"><a href="#cb1-212" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb1-213"><a href="#cb1-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-214"><a href="#cb1-214" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Equal 1 ms slots give each digit a 500 Hz refresh rate and 50% duty.</span></span>
+<span id="cb1-215"><a href="#cb1-215" aria-hidden="true" tabindex="-1"></a>    <span class="kw">assign</span> displayed_hex = select_newest ? newest : older;</span>
+<span id="cb1-216"><a href="#cb1-216" aria-hidden="true" tabindex="-1"></a>    <span class="kw">assign</span> digit_n       = select_newest ? <span class="bn">2'b10</span> : <span class="bn">2'b01</span>;</span>
+<span id="cb1-217"><a href="#cb1-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-218"><a href="#cb1-218" aria-hidden="true" tabindex="-1"></a>    hex_seven_segment decoder (</span>
+<span id="cb1-219"><a href="#cb1-219" aria-hidden="true" tabindex="-1"></a>        .hex(displayed_hex),<span class="dt"> .segments_n</span>(segments_n)</span>
+<span id="cb1-220"><a href="#cb1-220" aria-hidden="true" tabindex="-1"></a>    );</span>
+<span id="cb1-221"><a href="#cb1-221" aria-hidden="true" tabindex="-1"></a><span class="kw">endmodule</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p>I found the design somewhat obscure and hard to understand. All of the keypad logic is placed into one giant FSM with lots of internal signals. There appear to be four states that involve confirming or waiting for button presses and releases. The next state logic is very unclear to me, there are lots of signals whose purposes I am not sure of, and all of it is wrangled into a convoluted case statement. The LLM did not really provide an explanation of how the design worked. If I were to design this on my own, I would have modularized the design more.</p>
+<hr>
+<p>Prompt 2:</p>
+<blockquote class="blockquote">
+<p>Target device: Lattice iCE40 UP5K FPGA.</p>
+<p>Overall Goal: Write SystemVerilog to scan a 4x4 matrix keypad and display the last two hex keys pressed on a dual 7 segment display.</p>
+<p>Current Goal: Write a synthesizable SystemVerilog module that produces a one‑shot registration signal for the keypad system. Behavior:</p>
+<ul>
+<li>When a key press is first detected, capture the current key code and assert a single‑cycle “new key” pulse.</li>
+<li>While any key remains pressed, do not accept additional keys.</li>
+<li>Only after keys are released should a subsequent press be recognized.</li>
+<li>This should handle debouncing of the keys.</li>
+</ul>
+<p>Implement as a small synchronous FSM with enumerated states and glitch‑free outputs. Keep names and interfaces reasonable; do not assume any hidden modules beyond what you define here.</p>
+<p>Write a synthesizable SystemVerilog module that cycles through keypad columns (active‑low, one at a time) and samples rows (active‑low) to detect a single key at a time. Behavior:</p>
+<ul>
+<li>Iterate columns at a suitable scan rate derived from the divided clock and sample rows.</li>
+<li>When a key is detected, report a stable key code consistent with a standard 4x4 keypad layout and maintain it while the key remains pressed.</li>
+<li>Provide a boolean signal indicating whether any key is currently pressed.</li>
+</ul>
+<p>Use clean state encoding and synchronous logic; avoid combinational feedback and latches.</p>
+<p>Write a top‑level SystemVerilog module that instantiates the scanner and one‑shot modules, shifts the last two keys (older ← most recent; most recent ← new), and drives a multiplexed two‑digit seven‑segment display. Requirements:</p>
+<ul>
+<li>Update the displayed digits only when a new key is registered.</li>
+<li>Ensure equal apparent brightness and no visible flicker.</li>
+<li>Keep all logic synthesizable and synchronous; use idiomatic SystemVerilog constructs.</li>
+</ul>
+<p>Provide any small clock‑enable or divider logic you need. You can also assume that a sevenSegment module exists that takes a 4 bit input and outputs the 7 segments.</p>
+</blockquote>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Spoiler: Click to show code
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode sv code-with-copy"><code class="sourceCode systemverilog"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> key_register #(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Number of consecutive clock cycles for which the press/release</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// condition must remain stable before it is accepted.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">parameter</span> <span class="kw">int</span> <span class="kw">unsigned</span> DEBOUNCE_CYCLES = <span class="dv">4</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>) (</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span>       clk,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span>       rst_n,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Inputs from keypad scanner / decoder</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span>       key_pressed,   <span class="co">// 1 when any key is detected</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">input</span>  <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] key_code,      <span class="co">// decoded hexadecimal key</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Registered output</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">output</span> <span class="kw">logic</span>       new_key,       <span class="co">// one-clock pulse for each accepted press</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">output</span> <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] registered_key</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>);</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">typedef</span> <span class="kw">enum</span> <span class="kw">logic</span> [<span class="dv">1</span>:<span class="dv">0</span>] {</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        IDLE,               <span class="co">// waiting for a key press</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>        DEBOUNCE_PRESS,     <span class="co">// verifying that press is stable</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>        HELD,               <span class="co">// key accepted; wait for release</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        DEBOUNCE_RELEASE    <span class="co">// verifying that release is stable</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    } state_t;</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    state_t <span class="ot">state</span>;</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">localparam</span> <span class="kw">int</span> <span class="kw">unsigned</span> COUNT_WIDTH =</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>        (DEBOUNCE_CYCLES &lt;= <span class="dv">1</span>) ? <span class="dv">1</span> : <span class="kw">$clog2</span>(DEBOUNCE_CYCLES);</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span> [COUNT_WIDTH<span class="dv">-1</span>:<span class="dv">0</span>] debounce_count;</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">logic</span> [<span class="dv">3</span>:<span class="dv">0</span>] candidate_key;</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">always_ff</span> @(<span class="kw">posedge</span> clk <span class="kw">or</span> <span class="kw">negedge</span> rst_n) <span class="kw">begin</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>        <span class="kw">if</span> (!rst_n) <span class="kw">begin</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>            <span class="ot">state</span>          &lt;= IDLE;</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>            debounce_count &lt;= '<span class="dv">0</span>;</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>            candidate_key  &lt;= '<span class="dv">0</span>;</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>            registered_key &lt;= '<span class="dv">0</span>;</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>            new_key        &lt;= <span class="bn">1'b0</span>;</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>        <span class="kw">end</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>        <span class="kw">else</span> <span class="kw">begin</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>            <span class="co">// Default assignment makes new_key a one-clock pulse.</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>            new_key &lt;= <span class="bn">1'b0</span>;</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>            <span class="kw">case</span> (<span class="ot">state</span>)</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>                <span class="co">// ---------------------------------------------------------</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>                <span class="co">// Wait for the beginning of a key press.</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>                <span class="co">// ---------------------------------------------------------</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>                IDLE: <span class="kw">begin</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>                    debounce_count &lt;= '<span class="dv">0</span>;</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">if</span> (key_pressed) <span class="kw">begin</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>                        <span class="co">// Remember the key seen at the start of the press.</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>                        candidate_key &lt;= key_code;</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">if</span> (DEBOUNCE_CYCLES &lt;= <span class="dv">1</span>) <span class="kw">begin</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>                            registered_key &lt;= key_code;</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>                            new_key        &lt;= <span class="bn">1'b1</span>;</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>                            <span class="ot">state</span>          &lt;= HELD;</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">end</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">else</span> <span class="kw">begin</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>                            <span class="ot">state</span> &lt;= DEBOUNCE_PRESS;</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">end</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">end</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>                <span class="kw">end</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>                <span class="co">// ---------------------------------------------------------</span></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>                <span class="co">// Require the key to remain pressed long enough to reject</span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>                <span class="co">// contact bounce.</span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>                <span class="co">// ---------------------------------------------------------</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>                DEBOUNCE_PRESS: <span class="kw">begin</span></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">if</span> (!key_pressed) <span class="kw">begin</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>                        <span class="co">// Press disappeared before debounce interval ended.</span></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>                        debounce_count &lt;= '<span class="dv">0</span>;</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>                        <span class="ot">state</span>          &lt;= IDLE;</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">end</span></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">else</span> <span class="kw">if</span> (debounce_count == DEBOUNCE_CYCLES - <span class="dv">2</span>) <span class="kw">begin</span></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>                        registered_key &lt;= candidate_key;</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>                        new_key        &lt;= <span class="bn">1'b1</span>;</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>                        debounce_count &lt;= '<span class="dv">0</span>;</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>                        <span class="ot">state</span>          &lt;= HELD;</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">end</span></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">else</span> <span class="kw">begin</span></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>                        debounce_count &lt;= debounce_count + <span class="bn">1'b1</span>;</span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">end</span></span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>                <span class="kw">end</span></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>                <span class="co">// ---------------------------------------------------------</span></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>                <span class="co">// A key has already been registered. Ignore all key-code</span></span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>                <span class="co">// changes until every key has been released.</span></span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a>                <span class="co">// ---------------------------------------------------------</span></span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>                HELD: <span class="kw">begin</span></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a>                    debounce_count &lt;= '<span class="dv">0</span>;</span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">if</span> (!key_pressed) <span class="kw">begin</span></span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">if</span> (DEBOUNCE_CYCLES &lt;= <span class="dv">1</span>) <span class="kw">begin</span></span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a>                            <span class="ot">state</span> &lt;= IDLE;</span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">end</span></span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">else</span> <span class="kw">begin</span></span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a>                            <span class="ot">state</span> &lt;= DEBOUNCE_RELEASE;</span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">end</span></span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">end</span></span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a>                <span class="kw">end</span></span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>                <span class="co">// ---------------------------------------------------------</span></span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>                <span class="co">// Require release to remain stable before re-arming.</span></span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>                <span class="co">// This prevents release bounce from producing another key.</span></span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>                <span class="co">// ---------------------------------------------------------</span></span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>                DEBOUNCE_RELEASE: <span class="kw">begin</span></span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">if</span> (key_pressed) <span class="kw">begin</span></span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>                        <span class="co">// Still the same physical press, or release bounce.</span></span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>                        debounce_count &lt;= '<span class="dv">0</span>;</span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>                        <span class="ot">state</span>          &lt;= HELD;</span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">end</span></span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">else</span> <span class="kw">if</span> (debounce_count == DEBOUNCE_CYCLES - <span class="dv">2</span>) <span class="kw">begin</span></span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>                        debounce_count &lt;= '<span class="dv">0</span>;</span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>                        <span class="ot">state</span>          &lt;= IDLE;</span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">end</span></span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">else</span> <span class="kw">begin</span></span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>                        debounce_count &lt;= debounce_count + <span class="bn">1'b1</span>;</span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">end</span></span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a>                <span class="kw">end</span></span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a>                <span class="kw">default</span>: <span class="kw">begin</span></span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a>                    <span class="ot">state</span>          &lt;= IDLE;</span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a>                    debounce_count &lt;= '<span class="dv">0</span>;</span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a>                <span class="kw">end</span></span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a>            <span class="kw">endcase</span></span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>        <span class="kw">end</span></span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>    <span class="kw">end</span></span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a><span class="kw">endmodule</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p>The design is more modular than the monolithic prompt, but it is still quite convoluted to me. For example, the debouncer module is much longer than mine and has four states, whereas mine only has two. It is also written specifically for the keypad module, while I designed min to be more of a general-purpose debouncer that could be used anywhere. In the future, I think I would talk through the approach with an LLM first before having it generate any code, that way I will be able to understand the design better.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/conjoneshmc\.github\.io\/e155-portfolio\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
