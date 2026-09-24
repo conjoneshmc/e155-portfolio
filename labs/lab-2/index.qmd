@@ -1,6 +1,6 @@
 ---
 title: "Lab 2: Multiplexed 7-Segment Display"
-description: "Under construction"
+description: "When you're just a couple pins short"
 author: "Connor Jones"
 date: "2026-09-11"
 draft: false
@@ -141,7 +141,7 @@ Breakdown of time spent in lab:
 - **Hardware and circuit design:** ~5 hours
 - **Verilog:** ~2 hours
 - **ENTIRE LAB WORKING IN HARDWARE AFTER 7 HOURS**
-- **Documentation and calulcations:** ~5 hours
+- **Documentation and calculations:** ~5 hours
 - **Lab writeup:** ~3 hours
 
 **Total time spent:** ~15 hours

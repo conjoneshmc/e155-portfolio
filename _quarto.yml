@@ -16,6 +16,8 @@ website:
             href: labs/lab-1/index.qmd
           - text: Lab 2
             href: labs/lab-2/index.qmd
+          - text: Lab 3
+            href: labs/lab-3/index.qmd
       - text: Blog
         href: blog.qmd
 
