@@ -1,6 +1,6 @@
 ---
 title: "Lab 3: Keypad Scanner"
-description: "I hate testbenches"
+description: "I paid for all the logic elements, I will use all the logic elements"
 author: "Connor Jones"
 date: "2026-09-20"
 draft: false
@@ -12,6 +12,8 @@ In this lab, I wired up a keypad to an FPGA and displayed the last two button pr
 
 
 ## Module Design
+
+[The code for this lab can be found at this repository.](https://github.com/conjoneshmc/e155-labs/tree/main/lab-3)
 
 When designing my approach to this lab, I split my work up across a number of different submodules. In total, I had 12 different modules, although some were re-used from previous labs. This section describes the design approaches I took and the structure of different modules and how they communicate.
 
@@ -91,6 +93,12 @@ Design tradeoffs:
 
 
 ## Testbenches & Simulation
+
+### Yosys Synthesis Report
+
+![](media/yosys-report.png)
+
+The synthesis report from `yosys` (the open-source synthesizer I used) reports no latch cells or tri-state buffers.
 
 ### Top-Level
 
@@ -213,8 +221,434 @@ This module synchronizes asynchronous inputs, at the cost of introducing two clo
 
 ## Conclusion
 
-After testing the design in hardware, it meets all the proficiency and excellence specifications, including all the edge cases involving multiple button presses.
+After testing the design in hardware, it meets all the specifications, including all the edge cases involving multiple button presses.
 
-**Time spent:** 12 hours
+**Time spent:** 13 hours
 
 The lab was working entirely in hardware after about **5 hours**.
+
+## AI Prototype
+
+Prompt 1:
+
+> Target device: Lattice iCE40 UP5K FPGA with internal high-speed oscillator (~20 MHz).
+>
+> Write synthesizable SystemVerilog to scan a 4x4 matrix keypad and display the last two hex keys pressed on a dual 7‑segment display. Implement:
+>
+> - A clock divider that derives a scan clock on the order of 100–200 Hz from the internal oscillator.
+> - A keypad scanning controller that iterates one active‑low column at a time and samples active‑low rows, registering at most one key per press (debounce‑by‑design), ignoring additional presses while any key is held, and allowing a new registration only after release.
+> - A top level that updates two hex digits (older and most recent) when a new key is registered and drives a time‑multiplexed two‑digit 7‑segment display without visible flicker and with balanced brightness.
+>
+> Use idiomatic SystemVerilog (e.g., logic, always_ff, enumerated states for FSMs). Provide clean module boundaries and keep all state synchronous. Include brief comments explaining the design choices.
+
+::: {.callout-note collapse="true"}
+## Spoiler: Click to show code
+
+```sv
+// All state uses the 24 MHz oscillator clock. Hold reset high during
+// startup, then deassert it synchronously to the oscillator clock.
+
+module periodic_enable #(
+    parameter int unsigned CLOCK_HZ = 24_000_000,
+    parameter int unsigned RATE_HZ  = 200
+) (
+    input  logic clk,
+    input  logic reset,
+    output logic tick
+);
+    localparam int unsigned COUNT_MAX = CLOCK_HZ / RATE_HZ;
+    localparam int unsigned WIDTH = $clog2(COUNT_MAX);
+    logic [WIDTH-1:0] count;
+
+    always_ff @(posedge clk) begin
+        if (reset) begin
+            count <= '0;
+            tick  <= 1'b0;
+        end else if (count == COUNT_MAX - 1) begin
+            count <= '0;
+            tick  <= 1'b1;
+        end else begin
+            count <= count + 1'b1;
+            tick  <= 1'b0;
+        end
+    end
+endmodule
+
+module keypad_scanner (
+    input  logic       clk,
+    input  logic       reset,
+    input  logic       scan_tick,
+    input  logic [3:0] rows_n,
+    output logic [3:0] cols_n,
+    output logic [3:0] key,
+    output logic       key_valid
+);
+    typedef enum logic [1:0] {
+        WAIT_PRESS, CONFIRM_PRESS, WAIT_RELEASE, CONFIRM_RELEASE
+    } state_t;
+
+    state_t state;
+    logic [1:0] column;
+    logic [3:0] rows_meta, rows_sync;
+    logic       frame_any;
+    logic [3:0] frame_key, candidate;
+    logic       sample_any;
+    logic [3:0] sample_key;
+
+    // Synchronize the asynchronous keypad inputs before sampling them.
+    always_ff @(posedge clk) begin
+        if (reset) begin
+            rows_meta <= 4'hF;
+            rows_sync <= 4'hF;
+        end else begin
+            rows_meta <= rows_n;
+            rows_sync <= rows_meta;
+        end
+    end
+
+    // Exactly one column is low. It remains selected for 5 ms before
+    // its rows are sampled and the next column is selected.
+    always_comb begin
+        cols_n = 4'hF;
+        cols_n[column] = 1'b0;
+
+        sample_any = (rows_sync != 4'hF);
+        sample_key = {column, 2'b00};
+        if      (!rows_sync[0]) sample_key[1:0] = 2'd0;
+        else if (!rows_sync[1]) sample_key[1:0] = 2'd1;
+        else if (!rows_sync[2]) sample_key[1:0] = 2'd2;
+        else                    sample_key[1:0] = 2'd3;
+    end
+
+    always_ff @(posedge clk) begin
+        if (reset) begin
+            column    <= 2'd0;
+            frame_any <= 1'b0;
+            frame_key <= 4'd0;
+            candidate <= 4'd0;
+            state     <= WAIT_PRESS;
+            key       <= 4'd0;
+            key_valid <= 1'b0;
+        end else begin
+            key_valid <= 1'b0; // One system-clock pulse per accepted key.
+
+            if (scan_tick) begin
+                if (sample_any && !frame_any)
+                    frame_key <= sample_key;
+
+                if (column == 2'd3) begin
+                    // Current sample completes the four-column frame.
+                    case (state)
+                        WAIT_PRESS: begin
+                            if (frame_any || sample_any) begin
+                                candidate <= frame_any ? frame_key : sample_key;
+                                state     <= CONFIRM_PRESS;
+                            end
+                        end
+
+                        CONFIRM_PRESS: begin
+                            if (!(frame_any || sample_any)) begin
+                                state <= WAIT_PRESS;
+                            end else if ((frame_any ? frame_key : sample_key)
+                                         == candidate) begin
+                                key       <= candidate;
+                                key_valid <= 1'b1;
+                                state     <= WAIT_RELEASE;
+                            end else begin
+                                candidate <= frame_any ? frame_key : sample_key;
+                            end
+                        end
+
+                        WAIT_RELEASE: begin
+                            if (!(frame_any || sample_any))
+                                state <= CONFIRM_RELEASE;
+                        end
+
+                        CONFIRM_RELEASE: begin
+                            if (frame_any || sample_any)
+                                state <= WAIT_RELEASE;
+                            else
+                                state <= WAIT_PRESS;
+                        end
+
+                        default: state <= WAIT_PRESS;
+                    endcase
+
+                    frame_any <= 1'b0;
+                    column    <= 2'd0;
+                end else begin
+                    frame_any <= frame_any || sample_any;
+                    column    <= column + 2'd1;
+                end
+            end
+        end
+    end
+endmodule
+
+module hex_seven_segment (
+    input  logic [3:0] hex,
+    output logic [6:0] segments_n  // {a,b,c,d,e,f,g}, active low
+);
+    always_comb begin
+        case (hex)
+            4'h0: segments_n = 7'b0000001;
+            4'h1: segments_n = 7'b1001111;
+            4'h2: segments_n = 7'b0010010;
+            4'h3: segments_n = 7'b0000110;
+            4'h4: segments_n = 7'b1001100;
+            4'h5: segments_n = 7'b0100100;
+            4'h6: segments_n = 7'b0100000;
+            4'h7: segments_n = 7'b0001111;
+            4'h8: segments_n = 7'b0000000;
+            4'h9: segments_n = 7'b0000100;
+            4'hA: segments_n = 7'b0001000;
+            4'hB: segments_n = 7'b1100000;
+            4'hC: segments_n = 7'b0110001;
+            4'hD: segments_n = 7'b1000010;
+            4'hE: segments_n = 7'b0110000;
+            default: segments_n = 7'b0111000; // F
+        endcase
+    end
+endmodule
+
+module keypad_hex_display (
+    input  logic       reset,      // Active-high synchronous reset
+    input  logic [3:0] rows_n,     // Active-low; external pull-ups required
+    output logic [3:0] cols_n,
+    output logic [6:0] segments_n, // Shared, active-low segment outputs
+    output logic [1:0] digit_n     // {older, newest}, active low
+);
+    logic clk;
+    logic scan_tick, display_tick;
+    logic [3:0] key, older, newest, displayed_hex;
+    logic key_valid, select_newest;
+
+    SB_HFOSC #(.CLKHF_DIV("0b01")) oscillator (
+        .CLKHFPU(1'b1),
+        .CLKHFEN(1'b1),
+        .CLKHF(clk)
+    );
+
+    periodic_enable #(.RATE_HZ(200)) scan_rate (
+        .clk(clk), .reset(reset), .tick(scan_tick)
+    );
+
+    periodic_enable #(.RATE_HZ(1_000)) display_rate (
+        .clk(clk), .reset(reset), .tick(display_tick)
+    );
+
+    keypad_scanner scanner (
+        .clk(clk), .reset(reset), .scan_tick(scan_tick),
+        .rows_n(rows_n), .cols_n(cols_n),
+        .key(key), .key_valid(key_valid)
+    );
+
+    always_ff @(posedge clk) begin
+        if (reset) begin
+            older         <= 4'h0;
+            newest        <= 4'h0;
+            select_newest <= 1'b0;
+        end else begin
+            if (key_valid) begin
+                older  <= newest;
+                newest <= key;
+            end
+            if (display_tick)
+                select_newest <= ~select_newest;
+        end
+    end
+
+    // Equal 1 ms slots give each digit a 500 Hz refresh rate and 50% duty.
+    assign displayed_hex = select_newest ? newest : older;
+    assign digit_n       = select_newest ? 2'b10 : 2'b01;
+
+    hex_seven_segment decoder (
+        .hex(displayed_hex), .segments_n(segments_n)
+    );
+endmodule
+```
+:::
+
+I found the design somewhat obscure and hard to understand. All of the keypad logic is placed into one giant FSM with lots of internal signals. There appear to be four states that involve confirming or waiting for button presses and releases. The next state logic is very unclear to me, there are lots of signals whose purposes I am not sure of, and all of it is wrangled into a convoluted case statement. The LLM did not really provide an explanation of how the design worked. If I were to design this on my own, I would have modularized the design more.
+
+---
+
+Prompt 2:
+
+> Target device: Lattice iCE40 UP5K FPGA.
+>
+> Overall Goal: Write SystemVerilog to scan a 4x4 matrix keypad and display the last two hex keys pressed on a dual 7 segment display.
+>
+> Current Goal: Write a synthesizable SystemVerilog module that produces a one‑shot registration signal for the keypad system. Behavior:
+>
+> - When a key press is first detected, capture the current key code and assert a single‑cycle “new key” pulse.
+> - While any key remains pressed, do not accept additional keys.
+> - Only after keys are released should a subsequent press be recognized.
+> - This should handle debouncing of the keys.
+>
+> Implement as a small synchronous FSM with enumerated states and glitch‑free outputs. Keep names and interfaces reasonable; do not assume any hidden modules beyond what you define here.
+>
+> Write a synthesizable SystemVerilog module that cycles through keypad columns (active‑low, one at a time) and samples rows (active‑low) to detect a single key at a time. Behavior:
+>
+> - Iterate columns at a suitable scan rate derived from the divided clock and sample rows.
+> - When a key is detected, report a stable key code consistent with a standard 4x4 keypad layout and maintain it while the key remains pressed.
+> - Provide a boolean signal indicating whether any key is currently pressed.
+>
+> Use clean state encoding and synchronous logic; avoid combinational feedback and latches.
+>
+> Write a top‑level SystemVerilog module that instantiates the scanner and one‑shot modules, shifts the last two keys (older ← most recent; most recent ← new), and drives a multiplexed two‑digit seven‑segment display. Requirements:
+>
+> - Update the displayed digits only when a new key is registered.
+> - Ensure equal apparent brightness and no visible flicker.
+> - Keep all logic synthesizable and synchronous; use idiomatic SystemVerilog constructs.
+>
+> Provide any small clock‑enable or divider logic you need. You can also assume that a sevenSegment module exists that takes a 4 bit input and outputs the 7 segments.
+
+::: {.callout-note collapse="true"}
+## Spoiler: Click to show code
+
+```sv
+module key_register #(
+    // Number of consecutive clock cycles for which the press/release
+    // condition must remain stable before it is accepted.
+    parameter int unsigned DEBOUNCE_CYCLES = 4
+) (
+    input  logic       clk,
+    input  logic       rst_n,
+
+    // Inputs from keypad scanner / decoder
+    input  logic       key_pressed,   // 1 when any key is detected
+    input  logic [3:0] key_code,      // decoded hexadecimal key
+
+    // Registered output
+    output logic       new_key,       // one-clock pulse for each accepted press
+    output logic [3:0] registered_key
+);
+
+    typedef enum logic [1:0] {
+        IDLE,               // waiting for a key press
+        DEBOUNCE_PRESS,     // verifying that press is stable
+        HELD,               // key accepted; wait for release
+        DEBOUNCE_RELEASE    // verifying that release is stable
+    } state_t;
+
+    state_t state;
+
+    localparam int unsigned COUNT_WIDTH =
+        (DEBOUNCE_CYCLES <= 1) ? 1 : $clog2(DEBOUNCE_CYCLES);
+
+    logic [COUNT_WIDTH-1:0] debounce_count;
+    logic [3:0] candidate_key;
+
+
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            state          <= IDLE;
+            debounce_count <= '0;
+            candidate_key  <= '0;
+            registered_key <= '0;
+            new_key        <= 1'b0;
+        end
+        else begin
+            // Default assignment makes new_key a one-clock pulse.
+            new_key <= 1'b0;
+
+            case (state)
+
+                // ---------------------------------------------------------
+                // Wait for the beginning of a key press.
+                // ---------------------------------------------------------
+                IDLE: begin
+                    debounce_count <= '0;
+
+                    if (key_pressed) begin
+                        // Remember the key seen at the start of the press.
+                        candidate_key <= key_code;
+
+                        if (DEBOUNCE_CYCLES <= 1) begin
+                            registered_key <= key_code;
+                            new_key        <= 1'b1;
+                            state          <= HELD;
+                        end
+                        else begin
+                            state <= DEBOUNCE_PRESS;
+                        end
+                    end
+                end
+
+
+                // ---------------------------------------------------------
+                // Require the key to remain pressed long enough to reject
+                // contact bounce.
+                // ---------------------------------------------------------
+                DEBOUNCE_PRESS: begin
+                    if (!key_pressed) begin
+                        // Press disappeared before debounce interval ended.
+                        debounce_count <= '0;
+                        state          <= IDLE;
+                    end
+                    else if (debounce_count == DEBOUNCE_CYCLES - 2) begin
+                        registered_key <= candidate_key;
+                        new_key        <= 1'b1;
+
+                        debounce_count <= '0;
+                        state          <= HELD;
+                    end
+                    else begin
+                        debounce_count <= debounce_count + 1'b1;
+                    end
+                end
+
+
+                // ---------------------------------------------------------
+                // A key has already been registered. Ignore all key-code
+                // changes until every key has been released.
+                // ---------------------------------------------------------
+                HELD: begin
+                    debounce_count <= '0;
+
+                    if (!key_pressed) begin
+                        if (DEBOUNCE_CYCLES <= 1) begin
+                            state <= IDLE;
+                        end
+                        else begin
+                            state <= DEBOUNCE_RELEASE;
+                        end
+                    end
+                end
+
+
+                // ---------------------------------------------------------
+                // Require release to remain stable before re-arming.
+                // This prevents release bounce from producing another key.
+                // ---------------------------------------------------------
+                DEBOUNCE_RELEASE: begin
+                    if (key_pressed) begin
+                        // Still the same physical press, or release bounce.
+                        debounce_count <= '0;
+                        state          <= HELD;
+                    end
+                    else if (debounce_count == DEBOUNCE_CYCLES - 2) begin
+                        debounce_count <= '0;
+                        state          <= IDLE;
+                    end
+                    else begin
+                        debounce_count <= debounce_count + 1'b1;
+                    end
+                end
+
+
+                default: begin
+                    state          <= IDLE;
+                    debounce_count <= '0;
+                end
+
+            endcase
+        end
+    end
+
+endmodule
+```
+:::
+
+The design is more modular than the monolithic prompt, but it is still quite convoluted to me. For example, the debouncer module is much longer than mine and has four states, whereas mine only has two. It is also written specifically for the keypad module, while I designed min to be more of a general-purpose debouncer that could be used anywhere. In the future, I think I would talk through the approach with an LLM first before having it generate any code, that way I will be able to understand the design better.
