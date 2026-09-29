@@ -1,0 +1,18 @@
+---
+title: "Lab 4: Digital Audio"
+description: "Datasheet hell"
+author: "Connor Jones"
+date: "2026-09-28"
+draft: false
+---
+
+## Introduction
+
+In this lab, I wired up a speaker to the MCU to play the notes in _Fur Elise_ by generating square waves on one of the GPIO pins.
+
+
+## Timer Calculations
+
+Timers 6 and 7 on the STM32 Nucleo 432KC were chosen for timekeeping due to their simplicity. `TIM6` was used to time the frequency of the square waves by setting the auto-reload register such that it would overflow at a desired frequency. `TIM7` was used to time the lengths between notes by having the timer overflow after the note's duration and checking for the update event flag to know when it has elapsed. Calculations for these timers are discussed below.
+
+### Frequency Timer (`TIM6`)

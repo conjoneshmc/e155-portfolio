@@ -18,7 +18,7 @@ author: "Connor Jones"
 
 ## Lab 4: Digital Audio
 
-Coming soon...
+[View lab report](./lab-4/index.qmd)
 
 ## Lab 5: Interrupts
 
