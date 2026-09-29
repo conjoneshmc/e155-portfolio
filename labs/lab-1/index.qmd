@@ -10,6 +10,9 @@ draft: false
 
 In this lab, I assembled the development board used for the class and tested the MCU and FPGA boards. Then, I wrote a Verilog module to control LEDs and a 7-segment display and uploaded it to the FPGA. Finally, I wired up an external 7-segment display to the board to display different hexadecimal digits, which could be controlled by the on-board DIP switches.
 
+The code used for this lab can be found at [this repository](https://github.com/conjoneshmc/e155-labs), under the `lab-1` folder.
+
+
 ## Design and Testing Methodology
 
 ### Onboard LEDs
@@ -70,9 +73,8 @@ Next, we need to design the actual circuit itself. The +3.3V from the FPGA obvio
 ![](media/calculations-1.svg)
 :::
 
-## Technical Documentation
 
-A link to the code used in this lab can be found [at this GitHub repository](https://github.com/conjoneshmc/e155-labs).
+## Technical Documentation
 
 ### Block Diagram
 
@@ -87,6 +89,7 @@ Note that `~reset` and `~switches` are active low, so I inverted these signals b
 ![Schematic for the 7-segment display circuit.](media/diagrams-1.svg)
 
 The figure above shows the schematic for the 7-segment display. Each segment is connected through the common anode of the display to the +3.3V pin on the FPGA, and the cathodes of each segment are connected to individual GPIO pins. Current-limiting resistors (whose values were calculated in the previous section) are placed in series with each segment to limit the current draw from the FPGA.
+
 
 ## Results and Discussion
 
@@ -132,13 +135,15 @@ The waveforms above demonstrate the `MAXCOUNT` feature of the `counter` module w
 
 The design also met all given specifications in hardware. The 2 on-board LEDs display the correct logic operations, and the other LED blinks at a rate of ~2.4Hz (measured with a stopwatch). The 7-segment display also uniquely displays all hexadecimal digits `0x0` though `0xF`, and all segments are equally bright regardless of how many segments are lit. The digit shown on the 7-segment-display is also correctly set according to the value of the switches.
 
+
 ## Conclusion
 
 In this lab, I successfully assembled the development board and tested the MCU and FPGA boards. Then, I wrote Verilog modules to control 3 on-board LEDs and an external 7-segment display. All Verilog modules were tested in simulation and displayed the correct behavior. When the design was flashed to the FPGA, the behavior also correctly met the specifications.
 
 I spent a total of **28 hours** on this lab.
 
-## AI Prototype Summary
+
+## AI Prototype
 
 I used ChatGPT 5.6-Sol to write the Verilog code for the AI prototype. The prompt given was:
 

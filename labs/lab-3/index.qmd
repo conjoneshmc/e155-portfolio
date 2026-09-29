@@ -10,10 +10,10 @@ draft: false
 
 In this lab, I wired up a keypad to an FPGA and displayed the last two button presses on a dual 7-segment display.
 
+The code used for this lab can be found at [this repository](https://github.com/conjoneshmc/e155-labs), under the `lab-3` folder.
+
 
 ## Module Design
-
-[The code for this lab can be found at this repository.](https://github.com/conjoneshmc/e155-labs/tree/main/lab-3)
 
 When designing my approach to this lab, I split my work up across a number of different submodules. In total, I had 12 different modules, although some were re-used from previous labs. This section describes the design approaches I took and the structure of different modules and how they communicate.
 
@@ -226,6 +226,7 @@ After testing the design in hardware, it meets all the specifications, including
 **Time spent:** 13 hours
 
 The lab was working entirely in hardware after about **5 hours**.
+
 
 ## AI Prototype
 

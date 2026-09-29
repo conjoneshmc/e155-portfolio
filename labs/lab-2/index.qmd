@@ -10,6 +10,9 @@ draft: false
 
 In this lab, I multiplexed a dual 7-segment display using the single 7-segment display module from Lab 1. I also designed and built a keypad scanning module capable of reading multiple simultaneous keypresses in preparation for Lab 3.
 
+The code used for this lab can be found at [this repository](https://github.com/conjoneshmc/e155-labs), under the `lab-2` folder.
+
+
 ## Design and Calculations
 
 In this lab, care had to be taken to ensure that current draw from the display did not exceed the maximum ratings of the FPGA. The table below taken from the datasheet indicates that the maximum current draw of the I/O pins is 8mA, whether sourcing or sinking current.
@@ -57,6 +60,7 @@ $R_s$ is the series resistance connected to the base of the transistor and $R_p$
 
 The specifications say to target a blinking rate of 2 Hz, and because there are 4 states, each output must last 0.125 seconds. Thus, `SCAN_DELAY` should be $24 \mathrm{MHz} \cdot 0.125 \mathrm{s} = 3000000$.
 
+
 ## Technical Documentation
 
 **Note:** The two different deliverables (7-segment display and keypad scanner) were demonstrated as separate modules for this lab because there were not enough FPGA pins to run both simultaneously.
@@ -95,6 +99,7 @@ The figures above show the schematics of the circuit used to drive the dual 7-se
 
 The figure above shows the schematics of the circuit used to read the 4x4 matrix keypad. The setup uses an open-drain output with 3904 NPN transistors so that row pins are floating when not being interrogated. This allows multiple keypresses to be handled in the same column without causing any contention between different voltages.
 
+
 ## Results and Discussion
 
 ### Testbench Simulation
@@ -132,6 +137,7 @@ The design met all the intended specifications in hardware:
 - There is no bleeding or flickering of the display.
 - The scanner signal appears on the LEDs correctly and handles multiple keypresses.
 
+
 ## Conclusion
 
 In this lab, I successfully multiplexed a dual 7-segment display and built a scanner module to read inputs from a 4x4 membrane keypad.
@@ -145,6 +151,7 @@ Breakdown of time spent in lab:
 - **Lab writeup:** ~3 hours
 
 **Total time spent:** ~15 hours
+
 
 ## AI Prototype
 
