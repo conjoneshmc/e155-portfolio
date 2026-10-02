@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Connor Jones">
+<meta name="dcterms.date" content="2026-09-28">
+<meta name="description" content="Datasheet hell">
+
+<title>Lab 4: Digital Audio – E155 Portfolio</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-cec5fe2bcc5b78801866de12c7617f02.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-87bffa701a79ed8ec71ae3e9b147f3fa.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">E155 Portfolio</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labs" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Labs</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-labs">    
+        <li>
+    <a class="dropdown-item" href="../../labs/index.html">
+ <span class="dropdown-text">Overview</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../labs/lab-1/index.html">
+ <span class="dropdown-text">Lab 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../labs/lab-2/index.html">
+ <span class="dropdown-text">Lab 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../labs/lab-3/index.html">
+ <span class="dropdown-text">Lab 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../labs/lab-4/index.html">
+ <span class="dropdown-text">Lab 4</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog.html"> 
+<span class="menu-text">Blog</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#timer-calculations" id="toc-timer-calculations" class="nav-link" data-scroll-target="#timer-calculations">Timer Calculations</a>
+  <ul>
+  <li><a href="#frequency-timer-tim6" id="toc-frequency-timer-tim6" class="nav-link" data-scroll-target="#frequency-timer-tim6">Frequency Timer (<code>TIM6</code>)</a></li>
+  <li><a href="#duration-timer-tim7" id="toc-duration-timer-tim7" class="nav-link" data-scroll-target="#duration-timer-tim7">Duration Timer (<code>TIM7</code>)</a></li>
+  </ul></li>
+  <li><a href="#schematics" id="toc-schematics" class="nav-link" data-scroll-target="#schematics">Schematics</a></li>
+  <li><a href="#results-and-conclusion" id="toc-results-and-conclusion" class="nav-link" data-scroll-target="#results-and-conclusion">Results and Conclusion</a></li>
+  <li><a href="#ai-prototype" id="toc-ai-prototype" class="nav-link" data-scroll-target="#ai-prototype">AI Prototype</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Lab 4: Digital Audio</h1>
+</div>
+
+<div>
+  <div class="description">
+    Datasheet hell
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Connor Jones </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 28, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>In this lab, I wired up a speaker to the MCU to play the notes in <em>Fur Elise</em> by generating square waves on one of the GPIO pins.</p>
+<p>The code used for this lab can be found at <a href="https://github.com/conjoneshmc/e155-labs">this repository</a>, under the <code>lab-4</code> folder.</p>
+</section>
+<section id="timer-calculations" class="level2">
+<h2 class="anchored" data-anchor-id="timer-calculations">Timer Calculations</h2>
+<p>Timers 6 and 7 on the STM32 Nucleo 432KC were chosen for timekeeping due to their simplicity. <code>TIM6</code> was used to time the frequency of the square waves by setting the auto-reload register such that it would overflow at a desired frequency. <code>TIM7</code> was used to time the lengths between notes by having the timer overflow after the note’s duration and checking for the update event flag to know when it has elapsed. Calculations for these timers are discussed below.</p>
+<section id="frequency-timer-tim6" class="level3">
+<h3 class="anchored" data-anchor-id="frequency-timer-tim6">Frequency Timer (<code>TIM6</code>)</h3>
+<p><code>MSI</code> was selected as the system clock running at the default frequency of <strong>4 MHz</strong>. According to the clock tree on the MCU datasheet, this clock passes through the <code>AHB</code> and <code>APB1</code> prescalers before reaching timers 6 and 7. <code>AHB</code> was configured not to divide the clock, while <code>APB1</code> was configured to divide by a factor of <code>16</code>. However, these timers multiply their clock frequencies by 2 if <code>APB1</code> is set to anything other than 1, so the net clock division ratio for timers 6 and 7 is really <code>8</code>. Thus, the base clock frequency of both timers is <strong>500 kHz</strong>.</p>
+<p>Each timer also comes with its own individual prescaler, allowing us to divide the clock frequency further. For <code>TIM6</code>, the prescaler register was set to <code>1</code>, which affects the clock frequency in the following manner:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>SPOILER: Click to show calculations
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The timer frequency and input clock frequency are governed by the following relationship:</p>
+<p><span class="math display">\[
+  f_\mathrm{timer} = \frac{f_\mathrm{clk}}{\mathrm{PSC} + 1}
+\]</span></p>
+<p>where <code>PSC</code> is the value of the prescaler register. Thus, the prescaler divides the clock by <code>2</code>, giving us a timer frequency of <strong>250 kHz</strong>.</p>
+</div>
+</div>
+</div>
+<p>We can then determine how to set the auto-reload register based on a desired input frequency:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>SPOILER: Click to show calculations
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The auto-reload register of the timer and the desired frequency should be governed by the following relationship:</p>
+<p><span class="math display">\[
+  \mathrm{ARR} = \frac{f_\mathrm{timer}}{f_\mathrm{desired}} - 1
+\]</span></p>
+<p>where <code>ARR</code> is the value in the auto-reload register. We need to subtract <code>1</code> because <code>ARR</code> is inclusive.</p>
+<p>I implemented the following helper function in my program to calculate <code>ARR</code> for me based on a given frequency:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">uint16_t</span> freq_to_max_count<span class="op">(</span><span class="dt">uint16_t</span> freq<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">(</span><span class="dt">uint16_t</span><span class="op">)</span> <span class="op">(</span>PITCH_TIMER_BASE_FREQ <span class="op">/</span> freq <span class="op">-</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p>This setup causes <code>TIM6</code> to overflow at the same frequency as our desired pitch. To achieve a 50% duty cycle of the square wave, we simply check whether the counter value is halfway to its maximum count and turn the GPIO pin on if so.</p>
+<p>The following calculations demonstrate the minimum and maximum frequencies, as well as any errors introduced by floor division and dealing with integers:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>SPOILER: Click to show calculations for minimum and maximum frequency
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <em>minimum</em> frequency supported corresponds to the longest period. The <code>ARR</code> register in the MCU is 16 bits, so setting it to the maximum value would give the timer a total of <code>65536</code> states. The minimum frequency supported is thus:</p>
+<p><span class="math display">\[
+  f_\mathrm{min} = \frac{250000}{65536} \approx 3.8147 \mathrm{Hz}
+\]</span></p>
+<p>The <em>maximum</em> frequency supported corresponds to the shortest period that has at least one “on” state and one “off” state. Setting the <code>ARR</code> to <code>1</code> makes the counter have exactly <code>2</code> states, one for turning the GPIO pin on and another for turning it off. The maximum frequency supported is thus:</p>
+<p><span class="math display">\[
+  f_\mathrm{max} = \frac{250000}{2} = 125000 \mathrm{Hz}
+\]</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>SPOILER: Click to show calculations for percent error
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>For an input frequency of <strong>220 Hz</strong>, the actual value loaded into the <code>ARR</code> register becomes:</p>
+<p><span class="math display">\[
+  \mathrm{ARR} = \left\lfloor \frac{250000}{220} \right\rfloor - 1 = 1135
+\]</span></p>
+<p>This means the counter will have <code>1136</code> states (because <code>ARR</code> is inclusive). To find the actual frequency produced by the square wave, we divide the timer frequency by the number of states:</p>
+<p><span class="math display">\[
+  f_\mathrm{actual} = \frac{250000}{1136} \approx 220.070422
+\]</span></p>
+<p>The percent error is thus <strong>0.032%</strong>, well within the 1% accuracy required by the specs.</p>
+<p>Repeating the calculations for <strong>1000 Hz</strong> actually gives us a percent error of <strong>0%</strong>, meaning the system can (theoretically) perfectly replicate this frequency. This makes sense because the frequency ratio between 250 kHz and 1000 Hz is an integer, so there are no errors introduced by doing floor division and storing the max count as an integer in C.</p>
+<p>These calculations are not sufficient to prove that all notes in <em>Fur Elise</em> can be played with this accuracy, because each note has a different frequency ratio with the base timer frequency and could all have different percent errors. I used the <code>Union[]</code> function in Mathematica to remove all duplicate frequencies and filter only the unique notes used in the song:</p>
+<pre><code>{262, 319, 330, 349, 392, 416, 440, 494, 523, 587, 623, 659, 699}</code></pre>
+<p>Then, I wrote a small function to calculate the percent error of each note:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode m code-with-copy"><code class="sourceCode matlab"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">percentError</span>[<span class="va">fDes_</span>] <span class="op">=</span> <span class="va">Block</span>[{<span class="va">fBase</span><span class="op">,</span> <span class="va">fActual</span>}<span class="op">,</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">fBase</span> <span class="op">=</span> <span class="fl">250000</span><span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">fActual</span> <span class="op">=</span> <span class="va">fBase</span> <span class="op">/</span> <span class="va">Floor</span>[<span class="va">fBase</span><span class="op">/</span><span class="va">fDes</span>]<span class="op">;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  (<span class="va">Abs</span>[<span class="va">fDes</span> <span class="op">-</span> <span class="va">fActual</span>] <span class="op">/</span> <span class="va">fActual</span> <span class="op">*</span> <span class="fl">100</span>) <span class="op">//</span> <span class="va">N</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>]<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Running this function on each of the pitches produces the following table:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Pitch (Hz)</th>
+<th style="text-align: right;">Percent Error (%)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">262</td>
+<td style="text-align: right;">0.0208</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">319</td>
+<td style="text-align: right;">0.0892</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">330</td>
+<td style="text-align: right;">0.0760</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">349</td>
+<td style="text-align: right;">0.0464</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">392</td>
+<td style="text-align: right;">0.1184</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">416</td>
+<td style="text-align: right;">0.1600</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">440</td>
+<td style="text-align: right;">0.0320</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">494</td>
+<td style="text-align: right;">0.0144</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">523</td>
+<td style="text-align: right;">0.0024</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">587</td>
+<td style="text-align: right;">0.2100</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">623</td>
+<td style="text-align: right;">0.0708</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">659</td>
+<td style="text-align: right;">0.0956</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">699</td>
+<td style="text-align: right;">0.1828</td>
+</tr>
+</tbody>
+</table>
+<p>Thus, all of the notes in <em>Fur Elise</em> can be replicated to within 1% accuracy in terms of pitch.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="duration-timer-tim7" class="level3">
+<h3 class="anchored" data-anchor-id="duration-timer-tim7">Duration Timer (<code>TIM7</code>)</h3>
+<p>For <code>TIM7</code>, <code>PSC</code> was set to <code>31</code> making it divide the clock by a factor of <code>32</code> according to calculations from the previous section. Thus, the timer frequency is <strong>15625 Hz</strong>.</p>
+<p>The calculations for setting the auto-reload register are slightly different because we want the timer to overflow after a set duration, not at a set frequency:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>SPOILER: Click to show calculations
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The auto-reload register of the timer and the desired duration should be governed by the following relationship:</p>
+<p><span class="math display">\[
+  \mathrm{ARR} = f_\mathrm{timer} \cdot \mathrm{duration} - 1
+\]</span></p>
+<p>where <code>ARR</code> is the value in the auto-reload register. Again, we need to subtract <code>1</code> because <code>ARR</code> is inclusive.</p>
+<p>I implemented the following helper function in my program to calculate <code>ARR</code> for me based on a given duration in milliseconds:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode c code-with-copy"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">uint16_t</span> duration_to_max_count<span class="op">(</span><span class="dt">uint16_t</span> duration<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="op">(</span><span class="dt">uint16_t</span><span class="op">)</span> <span class="op">((</span>DURATION_TIMER_BASE_FREQ <span class="op">*</span> duration<span class="op">)</span> <span class="op">/</span> <span class="dv">1000</span> <span class="op">-</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p>The following calculations demonstrate the minimum and maximum durations:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>SPOILER: Click to show calculations for minimum and maximum duration
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The <em>maximum</em> duration supported corresponds to the longest period. The <code>ARR</code> register in the MCU is 16 bits, so setting it to the maximum value would give the timer a total of <code>65536</code> states. The maximum duration supported is thus:</p>
+<p><span class="math display">\[
+  \mathrm{duration}_\mathrm{max} = \frac{65536}{15625} \approx 4.1943 \mathrm{s}
+\]</span></p>
+<p>The <em>minimum</em> duration supported corresponds to the shortest period. Setting the <code>ARR</code> to <code>0</code> makes the counter have exactly <code>1</code> state, which just generates an overflow event every clock cycle. The minimum duration supported is thus:</p>
+<p><span class="math display">\[
+  \mathrm{duration}_\mathrm{min} = \frac{1}{15625} \approx 0.000064 \mathrm{s}
+\]</span></p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="schematics" class="level2">
+<h2 class="anchored" data-anchor-id="schematics">Schematics</h2>
+<p>I followed the recommended schematic for building an LM386 amplifier with a gain of <code>20</code> according to the <a href="https://www.ti.com/lit/ds/snas545d/snas545d.pdf?ts=1790615184073&amp;ref_url=https%253A%252F%252Fwww.google.com%252F">datasheet</a>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="media/schematics.png" class="img-fluid figure-img"></p>
+<figcaption>Schematics used to drive the speaker through an LM386 audio amplifier.</figcaption>
+</figure>
+</div>
+<p>Not shown is a 10 uF capacitor between Vss and GND to stabilize the power supply. The non-inverting input of the amplifier is attached to the terminals of a potentiometer, allowing the volume to be adjusted.</p>
+</section>
+<section id="results-and-conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="results-and-conclusion">Results and Conclusion</h2>
+<p>After testing the design in hardware, it fully meets all specifications. The notes of <em>Fur Elise</em> are played at the correct tempo and with the right pitch, and rests are played appropriately. In addition, I programmed two extra tunes into the MCU that could be played over the speaker.</p>
+<p>I spent a total of <strong>12 hours</strong> on this lab. The design was fully working in hardware after about <strong>10 hours</strong>, and I spent the remaining time doing the writeup.</p>
+</section>
+<section id="ai-prototype" class="level2">
+<h2 class="anchored" data-anchor-id="ai-prototype">AI Prototype</h2>
+<p>I gave ChatGPT the following prompt:</p>
+<blockquote class="blockquote">
+<p>What timers should I use on the STM32L432KC to generate frequencies ranging from 220Hz to 1kHz? What’s the best choice of timer if I want to easily connect it to a GPIO pin? What formulae are relevant, and what registers need to be set to configure them properly?</p>
+</blockquote>
+<p>The AI’s response can be found <a href="https://chatgpt.com/share/6abb4325-8f8c-83e8-ad0c-be3d0e57648c">here</a>.</p>
+<ul>
+<li>I found the AI’s output to be very useful. It documented all the timers available on the MCU and their features, and selected <code>TIM2</code> due to having four output channels and a 32-bit counter.</li>
+<li>The response included all relevant formulas for calculating PWM frequency and duty cycle. It also warned of a common pitfall if you choose to modify the <code>APBx</code> prescaler, since that causes the timers to run at twice their input clock frequency.</li>
+<li>It recommended a prescaler value of <code>79</code> (assuming an input frequency of <strong>80 MHz</strong>) to divide down the timer frequency to <strong>1 MHz</strong>, making the math a lot easier. However, because the counter is 32-bits, the prescaler isn’t strictly necessary.</li>
+<li>It gave the necessary register configuration to set <code>PA0</code> into an alternate-function mode, allowing the timer to directly drive the GPIO pin.</li>
+<li>It also provided boilerplate code to write to these registers at the bare-metal level.</li>
+</ul>
+<p>For this lab, I chose <code>TIM6</code> and <code>TIM7</code> even though the AI response recommended against it because they were the simplest to work with and required the least amount of configuration. Reading through the documentation and reference manual for the timers was already taking me a huge portion of the time spent on lab, and I didn’t want to waste any more time trying to understand the workings of the more complicated timers when the basic ones did just fine.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/conjoneshmc\.github\.io\/e155-portfolio\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

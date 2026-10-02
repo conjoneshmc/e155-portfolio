@@ -157,6 +157,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../labs/lab-3/index.html">
  <span class="dropdown-text">Lab 3</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../labs/lab-4/index.html">
+ <span class="dropdown-text">Lab 4</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item">
@@ -255,10 +259,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>In this lab, I wired up a keypad to an FPGA and displayed the last two button presses on a dual 7-segment display.</p>
+<p>The code used for this lab can be found at <a href="https://github.com/conjoneshmc/e155-labs">this repository</a>, under the <code>lab-3</code> folder.</p>
 </section>
 <section id="module-design" class="level2">
 <h2 class="anchored" data-anchor-id="module-design">Module Design</h2>
-<p><a href="https://github.com/conjoneshmc/e155-labs/tree/main/lab-3">The code for this lab can be found at this repository.</a></p>
 <p>When designing my approach to this lab, I split my work up across a number of different submodules. In total, I had 12 different modules, although some were re-used from previous labs. This section describes the design approaches I took and the structure of different modules and how they communicate.</p>
 <section id="switch-debouncing" class="level3">
 <h3 class="anchored" data-anchor-id="switch-debouncing">Switch Debouncing</h3>

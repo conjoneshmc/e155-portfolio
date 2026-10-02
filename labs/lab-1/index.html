@@ -186,6 +186,10 @@ window.Quarto = {
     <a class="dropdown-item" href="../../labs/lab-3/index.html">
  <span class="dropdown-text">Lab 3</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../labs/lab-4/index.html">
+ <span class="dropdown-text">Lab 4</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item">
@@ -227,7 +231,7 @@ window.Quarto = {
   <li><a href="#hardware" id="toc-hardware" class="nav-link" data-scroll-target="#hardware">Hardware</a></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
-  <li><a href="#ai-prototype-summary" id="toc-ai-prototype-summary" class="nav-link" data-scroll-target="#ai-prototype-summary">AI Prototype Summary</a></li>
+  <li><a href="#ai-prototype" id="toc-ai-prototype" class="nav-link" data-scroll-target="#ai-prototype">AI Prototype</a></li>
   </ul>
 </nav>
     </div>
@@ -273,6 +277,7 @@ window.Quarto = {
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>In this lab, I assembled the development board used for the class and tested the MCU and FPGA boards. Then, I wrote a Verilog module to control LEDs and a 7-segment display and uploaded it to the FPGA. Finally, I wired up an external 7-segment display to the board to display different hexadecimal digits, which could be controlled by the on-board DIP switches.</p>
+<p>The code used for this lab can be found at <a href="https://github.com/conjoneshmc/e155-labs">this repository</a>, under the <code>lab-1</code> folder.</p>
 </section>
 <section id="design-and-testing-methodology" class="level2">
 <h2 class="anchored" data-anchor-id="design-and-testing-methodology">Design and Testing Methodology</h2>
@@ -357,7 +362,6 @@ led[1] = S2 &amp; S3</code></pre>
 </section>
 <section id="technical-documentation" class="level2">
 <h2 class="anchored" data-anchor-id="technical-documentation">Technical Documentation</h2>
-<p>A link to the code used in this lab can be found <a href="https://github.com/conjoneshmc/e155-labs">at this GitHub repository</a>.</p>
 <section id="block-diagram" class="level3">
 <h3 class="anchored" data-anchor-id="block-diagram">Block Diagram</h3>
 <div class="quarto-figure quarto-figure-center">
@@ -449,8 +453,8 @@ led[1] = S2 &amp; S3</code></pre>
 <p>In this lab, I successfully assembled the development board and tested the MCU and FPGA boards. Then, I wrote Verilog modules to control 3 on-board LEDs and an external 7-segment display. All Verilog modules were tested in simulation and displayed the correct behavior. When the design was flashed to the FPGA, the behavior also correctly met the specifications.</p>
 <p>I spent a total of <strong>28 hours</strong> on this lab.</p>
 </section>
-<section id="ai-prototype-summary" class="level2">
-<h2 class="anchored" data-anchor-id="ai-prototype-summary">AI Prototype Summary</h2>
+<section id="ai-prototype" class="level2">
+<h2 class="anchored" data-anchor-id="ai-prototype">AI Prototype</h2>
 <p>I used ChatGPT 5.6-Sol to write the Verilog code for the AI prototype. The prompt given was:</p>
 <blockquote class="blockquote">
 <p>Write SystemVerilog HDL to leverage the internal high speed oscillator in the Lattice UP5K FPGA and blink an LED at 2.4 Hz. Take full advantage of SystemVerilog syntax, for example, using logic instead of wire and reg.</p>
