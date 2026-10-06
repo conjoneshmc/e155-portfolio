@@ -22,7 +22,7 @@ author: "Connor Jones"
 
 ## Lab 5: Interrupts
 
-Coming soon...
+[View lab report](./lab-5/index.qmd)
 
 ## Lab 6: The Internet of Things and SPI
 
