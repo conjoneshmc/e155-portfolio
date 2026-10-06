@@ -22,7 +22,7 @@
   lang: "en",
   font: "EB Garamond",
   weight: 400,
-  size: 12pt
+  size: 14pt
 )
 
 #set par(spacing: 1em, justify: true)
@@ -32,27 +32,10 @@
 #show link: set text(fill: ral.classic.water-blue)
 #show link: underline
 
-#show heading.where(level: 1): set text(
-  weight: 800,
-  size: 20pt,
-  fill: ral.classic.signal-black
-)
-#show heading.where(level: 2): set text(
-  weight: 700,
-  size: 17pt,
-  fill: ral.classic.chestnut-brown
-)
-#show heading.where(level: 3): set text(
-  weight: 640,
-  size: 14pt,
-  style: "italic",
-  fill: ral.classic.ochre-brown
-)
-
 #show raw: set text(
   font: "Google Sans Code",
   weight: 300,
-  size: 10pt
+  size: 1em
 )
 #show: zebraw.with(
   lang: false,
@@ -62,7 +45,7 @@
 
 #show math.equation: set text(
   font: "STIX Two Math",
-  size: 11pt
+  size: 1em
 )
 
 #set math.vec(
@@ -117,4 +100,15 @@ $
   r &approx overline(T)_"pulse" / T_"AB" = 4.34
 $
 
-Thus, the pulse period is approximately 4.34 times the delay between rising edges, which is what we'll be measuring on the MCU.
+#pagebreak()
+
+$
+  T_"pulse" = frac(r dot "count"_"AB", f_"clk")
+  wide wide T_"rev" = n dot T_"pulse"
+$
+#v(-1em) #divider() #v(-1em)
+$
+  omega = #qty[1][rev] / T_"rev"
+    = frac(#qty[1][rev], quad n dot dfrac(r dot "count"_"AB", f_"clk") quad)
+    = frac(f_"clk", n dot r dot "count"_"AB")
+$
