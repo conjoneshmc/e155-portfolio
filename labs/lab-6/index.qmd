@@ -1,0 +1,13 @@
+---
+title: "Lab 6: The Internet of Things and SPI"
+description: "Oscilloscope probe hell"
+author: "Connor Jones"
+date: "2026-10-12"
+draft: false
+---
+
+## Introduction
+
+In this lab...
+
+The code used for this lab can be found at [this repository](https://github.com/conjoneshmc/e155-labs), under the `lab-6` folder.
