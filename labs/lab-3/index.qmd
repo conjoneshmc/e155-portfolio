@@ -48,11 +48,13 @@ Design tradeoffs:
 - The keypad module is also extremely hardware inefficient. It needs two copies of 4x4 bit arrays to store the un-debounced and debounced button states, as well as generating _16 copies_ of the debouncer module, which adds even more hardware usage. I probably could've changed the design to only require 4 debouncers, but it would require the `POLL_DELAY` to be slower than the `DEBOUNCE_DELAY` and might make the keypad less responsive.
 
 
-## Block Diagrams
+## Block Diagrams and FSMs
 
 ### Top-Level
 
 ![](media/block-diagram-top.png)
+
+![](media/fsm-top.png)
 
 ---
 
@@ -66,11 +68,15 @@ Design tradeoffs:
 
 ![](media/block-diagram-keypad.png)
 
+![](media/fsm-keypad.png)
+
 ---
 
 ### Keypad Entry
 
 ![](media/block-diagram-keypad-entry.png)
+
+![](media/fsm-keypad-entry.png)
 
 ---
 
