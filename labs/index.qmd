@@ -30,4 +30,4 @@ author: "Connor Jones"
 
 ## Lab 7: The Advanced Encryption Standard
 
-Coming soon...
+[View lab report](./lab-7/index.qmd)

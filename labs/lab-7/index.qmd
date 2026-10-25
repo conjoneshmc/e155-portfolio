@@ -1,0 +1,11 @@
+---
+title: "Lab 7: The Advanced Encryption Standard"
+description: "The worst lab"
+author: "Connor Jones"
+date: "2026-10-25"
+draft: false
+---
+
+## Introduction
+
+...
